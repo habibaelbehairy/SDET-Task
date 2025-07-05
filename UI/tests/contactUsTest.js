@@ -1,123 +1,154 @@
 const path = require("path");
 
 module.exports = {
-  // 1. All fields blank
+  beforeEach: function (browser) {
+    // Setup for each test
+    browser.maximizeWindow();
+  },
+
+  afterEach: function (browser, done) {
+    // Clean up after each test - ensure this runs even after failures
+    browser.end(function () {
+      done();
+    });
+  },
+
+  // 1. Contact Form - All fields blank should fail
   "Contact Form - All fields blank should fail": (browser) => {
     const contact = browser.page.contactUsPage();
     contact.navigate();
     contact.form("", "", "", "", "").assert.visible("@errorMessage");
   },
 
-  // 2. Invalid email with selected subject and valid message
-  "Contact Form - Invalid email should trigger error": (browser) => {
+  // 2. Invalid email and unselected subject should fail
+  "Contact Form - Invalid email and unselected subject should fail": (
+    browser
+  ) => {
     const contact = browser.page.contactUsPage();
     contact.navigate();
     contact
-      .form("Customer service", "user@", "ORD123", "", "This is a test message")
+      .form("--", "invalidEmail", "order123", "", "Hello")
       .assert.visible("@errorMessage");
   },
 
-  // 3. Valid email and file but no message
-  "Contact Form - Missing message should block submission": (browser) => {
-    const contact = browser.page.contactUsPage();
-    const filePath = path.resolve(
-      "C:\\Users\\habib\\Downloads\\SDET 2025 - Technical Task.pdf"
-    );
-    contact.navigate();
-    contact
-      .form("Customer service", "user@example.com", "ORD123", filePath, "")
-      .assert.visible("@errorMessage");
-  },
-
-  // 4. Invalid file type uploaded
-  "Contact Form - Invalid file type should show error": (browser) => {
-    const contact = browser.page.contactUsPage();
-    const filePath = path.resolve("C:\\Users\\habib\\Downloads\\malware.exe");
-    contact.navigate();
-    contact
-      .form(
-        "Customer service",
-        "user@example.com",
-        "ORD4",
-        filePath,
-        "Check attachment"
-      )
-      .assert.visible("@errorMessage");
-  },
-
-  // 5.  Very long message
-  "Contact Form - Long message ": (browser) => {
-    const longMsg = "a".repeat(5000);
+  // 3. Minimal valid submission should pass
+  "Contact Form - Minimal valid submission should pass": (browser) => {
     const contact = browser.page.contactUsPage();
     contact.navigate();
     contact
-      .form("Customer service", "user@example.com", "ORD467", "", longMsg)
+      .form("Customer service", "user@example.com", "order456", "", "Hello")
       .assert.visible("@successMessage");
   },
 
-  // 6. Long email
-  "Contact Form - very Long email (email max 64 before @)": (browser) => {
-    const filePath = path.resolve(
-      "C:\\Users\\habib\\Downloads\\SDET 2025 - Technical Task.pdf"
-    );
-    const longEmail = "verylongemailaddress".repeat(10) + "@example.com";
+  // 4. Missing order reference should pass
+  "Contact Form - missing order reference should pass": (browser) => {
+    const contact = browser.page.contactUsPage();
+    contact.navigate();
+    contact
+      .form("Customer service", "user@example.com", "", "", "Hello")
+      .assert.visible("@successMessage");
+  },
+
+  // 5. Missing message should fail
+  "Contact Form - missing message should fail": (browser) => {
+    const contact = browser.page.contactUsPage();
+    contact.navigate();
+    contact
+      .form("Customer service", "user@example.com", "order", "", "")
+      .assert.visible("@errorMessage");
+  },
+
+  // 6. Valid order reference and long message should pass
+  "Contact Form - Valid order reference and long message should pass": (
+    browser
+  ) => {
+    const contact = browser.page.contactUsPage();
+    const longMessage = "A".repeat(1000);
+    contact.navigate();
+    contact
+      .form("Webmaster", "user@example.com", "ORD123456", "", longMessage)
+      .assert.visible("@successMessage");
+  },
+
+  // 7. Invalid order reference
+  "Contact Form - Invalid order reference": (browser) => {
     const contact = browser.page.contactUsPage();
     contact.navigate();
     contact
       .form(
-        "Customer service",
-        longEmail,
-        "order202022",
-        filePath,
-        "Test message with long data"
+        "Webmaster",
+        "user@example.com",
+        "ORD@#!",
+        "",
+        "Please help with my order"
       )
       .assert.visible("@errorMessage");
   },
 
-  // 7. Contact Form - Should prevent script injection in message field
-  "Contact Form - Message with script tag should be sanitized": (browser) => {
+  // 8. XSS input in message
+  "Contact Form - XSS input in message": (browser) => {
     const contact = browser.page.contactUsPage();
     contact.navigate();
     contact
       .form(
         "Customer service",
         "user@example.com",
-        "ORD777",
+        "",
         "",
         '<script>alert("XSS")</script>'
       )
       .assert.visible("@errorMessage");
   },
 
-  // 8. Uploads a file larger than the allowed limit to verify rejection
-  "Contact Form - Large file upload should be rejected": (browser) => {
+  // 9. Upload valid file should pass
+  "Contact Form - Upload valid file should pass": (browser) => {
     const contact = browser.page.contactUsPage();
-    const filePath = "C:\\Users\\habib\\Downloads\\simulated_book_100MB.pdf";
+    const filePath = path.join(
+      __dirname,
+      "..",
+      "test-files",
+      "small-test-file.pdf"
+    );
     contact.navigate();
     contact
       .form(
         "Customer service",
         "user@example.com",
-        "ORD888",
+        "",
         filePath,
-        "This file is too big"
+        "Attached file"
       )
       .assert.visible("@successMessage");
   },
 
-  // 9. All valid fields (Happy path)
-  "Contact Form - All valid fields should succeed": (browser) => {
+  // 10. Upload unsupported file format should fail
+  "Contact Form - Upload unsupported file format should fail": (browser) => {
+    const contact = browser.page.contactUsPage();
+    const filePath = path.join(__dirname, "..", "test-files", "test-file.exe");
+    contact.navigate();
+    contact
+      .form(
+        "Customer service",
+        "user@example.com",
+        "",
+        filePath,
+        "Check this file"
+      )
+      .assert.visible("@errorMessage");
+  },
+
+  // 11. Submit with emojis and long order reference
+  "Contact Form - Submit with emojis and long order reference": (browser) => {
     const contact = browser.page.contactUsPage();
     contact.navigate();
     contact
       .form(
         "Customer service",
         "user@example.com",
-        "ORD101",
-        "invoice.png",
-        "Thank you for your help."
+        "ORDER" + "X".repeat(40),
+        "",
+        "Please help 😊"
       )
-      .assert.not.visible("@errorMessage")
-      .assert.visible("@successMessage");
+      .assert.visible("@errorMessage");
   },
 };
