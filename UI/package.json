@@ -1,0 +1,28 @@
+{
+  "name": "sdet-task",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/habibaelbehairy/SDET-Task.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/habibaelbehairy/SDET-Task/issues"
+  },
+  "homepage": "https://github.com/habibaelbehairy/SDET-Task#readme",
+  "dependencies": {
+    "chromedriver": "^138.0.1",
+    "nightwatch": "^3.12.2"
+  },
+  "devDependencies": {
+    "nightwatch-html-reporter": "^2.0.6"
+  }
+}
