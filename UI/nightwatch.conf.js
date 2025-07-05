@@ -39,15 +39,30 @@ module.exports = {
     workers: 'auto'
   },
 
+  // HTML Reporter configuration
+  reporter: [
+    'html',
+    'json'
+  ],
+
   test_settings: {
     default: {
       disable_error_log: false,
       launch_url: 'https://nightwatchjs.org',
 
+      // Continue running tests even after failures
+      continue_on_fail: true,
+      skip_testcases_on_fail: false,
+      end_session_on_fail: false,
+
+      // HTML Report configuration
+      output_folder: 'test-reports',
+      
       screenshots: {
-        enabled: false,
-        path: 'screens',
-        on_failure: true
+        enabled: true,
+        path: 'test-reports/screenshots',
+        on_failure: true,
+        on_error: true
       },
 
       desiredCapabilities: {
@@ -59,8 +74,6 @@ module.exports = {
         server_path: ''
       }
     },
-
-    
 
     firefox: {
       desiredCapabilities : {
@@ -80,7 +93,12 @@ module.exports = {
           // very verbose geckodriver logs
           // '-vv'
         ]
-      }
+      },
+      
+      // Continue running tests even after failures for Firefox
+      continue_on_fail: true,
+      skip_testcases_on_fail: false,
+      end_session_on_fail: false
     },
 
     chrome: {
@@ -106,7 +124,12 @@ module.exports = {
         cli_args: [
           // '--verbose'
         ]
-      }
+      },
+      
+      // Continue running tests even after failures for Chrome
+      continue_on_fail: true,
+      skip_testcases_on_fail: false,
+      end_session_on_fail: false
     },
 
     edge: {
@@ -129,7 +152,12 @@ module.exports = {
         cli_args: [
           // '--verbose'
         ]
-      }
+      },
+      
+      // Continue running tests even after failures for Edge
+      continue_on_fail: true,
+      skip_testcases_on_fail: false,
+      end_session_on_fail: false
     },
 
     //////////////////////////////////////////////////////////////////////////////////

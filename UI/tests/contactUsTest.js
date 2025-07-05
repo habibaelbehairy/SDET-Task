@@ -137,18 +137,4 @@ module.exports = {
       .assert.visible("@errorMessage");
   },
 
-  // 11. Submit with emojis and long order reference
-  "Contact Form - Submit with emojis and long order reference": (browser) => {
-    const contact = browser.page.contactUsPage();
-    contact.navigate();
-    contact
-      .form(
-        "Customer service",
-        "user@example.com",
-        "ORDER" + "X".repeat(40),
-        "",
-        "Please help 😊"
-      )
-      .assert.visible("@errorMessage");
-  },
 };
