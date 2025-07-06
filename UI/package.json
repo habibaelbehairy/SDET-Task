@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
- "scripts": {
+  "scripts": {
     "test": "nightwatch --reporter nightwatch-html-reporter",
     "test:chrome": "nightwatch --env chrome --reporter nightwatch-html-reporter",
     "test:firefox": "nightwatch --env firefox --reporter nightwatch-html-reporter"
@@ -21,10 +21,10 @@
   },
   "homepage": "https://github.com/habibaelbehairy/SDET-Task#readme",
   "dependencies": {
-    "chromedriver": "^138.0.1",
-    "nightwatch": "^3.12.2"
+    "chromedriver": "^138.0.1"
   },
   "devDependencies": {
+    "nightwatch": "^3.12.2",
     "nightwatch-html-reporter": "^2.0.6"
   }
 }
