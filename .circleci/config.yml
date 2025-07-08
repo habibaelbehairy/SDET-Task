@@ -8,28 +8,36 @@ jobs:
       - image: cimg/node:18.17-browsers
     steps:
       - checkout
-      - node/install-packages:
-          pkg-manager: npm
+      - run:
+          name: Install UI Dependencies
+          command: |
+            cd UI
+            npm install
       - run:
           name: Run UI Tests
-          command: npm run test:ui || npm run cypress:run || npm test
+          command: |
+            cd UI
+            npm test
 
   api-tests:
     docker:
       - image: cimg/node:18.17
     steps:
       - checkout
-      - node/install-packages:
-          pkg-manager: npm
+      - run:
+          name: Install API Dependencies
+          command: |
+            cd API
+            npm install
       - run:
           name: Run API Tests
-          command: npm run test:api || npm run mocha || npm test
+          command: |
+            cd API
+            npm test
 
 workflows:
   version: 2
   ui-and-api-tests:
     jobs:
       - ui-tests
-      - api-tests:
-          requires:
-            - ui-tests
+      - api-tests
