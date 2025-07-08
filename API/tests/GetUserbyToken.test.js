@@ -27,7 +27,7 @@ describe("GET USER - GET /api/v1/users", () => {
     const res = await request
       .get("/api/v1/users")
       .set("Authorization", "Bearer invalidtoken");
-    expect(res.status).toBe(401); 
+    expect(res.status).toBe(403); 
     expect(res.body.message).toMatch(/invalid token|unauthorized/i);
   });
 

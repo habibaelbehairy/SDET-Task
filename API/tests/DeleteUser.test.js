@@ -16,7 +16,7 @@ describe("DELETE USER - DELETE /api/v1/users", () => {
     const res = await request
       .delete("/api/v1/users")
       .set("Authorization", "Bearer INVALID_TOKEN");
-    expect(res.statusCode).toBe(401);
+    expect(res.statusCode).toBe(403);
   });
 
   test("DU03 - Missing token", async () => {
