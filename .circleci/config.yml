@@ -1,6 +1,7 @@
 version: 2.1
 orbs:
   node: circleci/node@5.1.0
+  browser-tools: circleci/browser-tools@1.4.1
 
 jobs:
   ui-tests:
@@ -8,16 +9,22 @@ jobs:
       - image: cimg/node:18.17-browsers
     steps:
       - checkout
+      - browser-tools/install-chrome
+      - browser-tools/install-chromedriver
       - run:
           name: Install UI Dependencies
           command: |
             cd UI
             npm install
       - run:
-          name: Run UI Tests
+          name: Run UI Tests with Chrome
           command: |
             cd UI
+            # Ensure your nightwatch.conf.js is set to use Chrome
             npm test
+      - store_artifacts:
+          path: UI/reports
+          destination: ui-test-reports
 
   api-tests:
     docker:
@@ -29,11 +36,35 @@ jobs:
           command: |
             cd API
             npm install
+            npm i --save mock-user-auth
+      - run:
+          name: Ensure dev script exists in package.json
+          command: |
+            cd API
+            # Check if dev script exists, if not add it
+            if ! grep -q "\"dev\":" package.json; then
+              sed -i 's/"scripts": {/"scripts": {\n    "dev": "node .\/node_modules\/mock-user-auth\/bin\/www.js",/' package.json
+            fi
+            cat package.json
+      - run:
+          name: Start API Server
+          command: |
+            cd API
+            npm run dev
+          background: true
+      - run:
+          name: Wait for API server to start
+          command: |
+            sleep 10
+            curl --retry 10 --retry-delay 1 -v http://localhost:3000/api/v1/users || true
       - run:
           name: Run API Tests
           command: |
             cd API
             npm test
+      - store_artifacts:
+          path: API/reports
+          destination: api-test-reports
 
 workflows:
   version: 2
