@@ -1,18 +1,36 @@
 {
-  "name": "sdet-task",
+  "name": "ui-tests",
   "version": "1.0.0",
-  "description": "",
+  "description": "UI automated tests using Nightwatch.js",
   "main": "index.js",
   "scripts": {
     "test": "nightwatch",
     "test:chrome": "nightwatch --env chrome",
     "test:firefox": "nightwatch --env firefox"
   },
-  "keywords": [],
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/habibaelbehairy/SDET-Task.git"
+  },
+  "keywords": [
+    "testing",
+    "automation",
+    "ui",
+    "nightwatch"
+  ],
+  "author": "Habiba Elbehairy",
   "license": "ISC",
+  "dependencies": {
+    "chromedriver": "^112.0.0",
+    "geckodriver": "^3.2.0",
+    "nightwatch": "^2.6.21",
+    "nightwatch-html-reporter": "^2.0.6"
+  },
   "devDependencies": {
-    "chromedriver": "^119.0.1",
-    "nightwatch": "^3.3.4"
+    "mocha": "^10.2.0",
+    "chai": "^4.3.7"
+  },
+  "engines": {
+    "node": ">=16.0.0"
   }
 }

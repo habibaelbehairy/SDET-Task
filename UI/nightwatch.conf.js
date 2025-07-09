@@ -357,80 +357,87 @@
 //   }
 // };
 
-const chromedriver = require('chromedriver');
 
 module.exports = {
+  // Location of test files
   src_folders: ['tests'],
+  
+  // Location of output reports
+  output_folder: 'tests_output',
+  
   page_objects_path: ['page-objects'],
   custom_commands_path: ['custom-commands'],
   custom_assertions_path: [],  // Empty array since you don't have custom assertions folder
   
+  // Global test settings
+  globals_path: '',
+  
+  webdriver: {
+    start_process: true,
+    server_path: require('chromedriver').path,
+    port: 9515
+  },
+  
   test_settings: {
     default: {
-      disable_error_log: false,
-      launch_url: 'http://automationpractice.multiformis.com/index.php',  // Updated to match your actual test URL
-      skip_testcases_on_fail: false,
-      end_session_on_fail: false,
       screenshots: {
         enabled: true,
         path: 'screenshots',
-        on_failure: true,
-        on_error: true
+        on_failure: true
       },
       desiredCapabilities: {
-        browserName: 'firefox'
+        browserName: 'chrome',
+        chromeOptions: {
+          args: [
+            '--headless',
+            '--no-sandbox',
+            '--disable-dev-shm-usage'
+          ],
+          w3c: false
+        }
       },
       webdriver: {
-        start_process: true,
-        server_path: process.env.CI ? '/usr/local/bin/geckodriver' : ''
+        port: 9515,
+        server_path: require('chromedriver').path,
+        cli_args: []
       }
     },
-
+    
     firefox: {
       desiredCapabilities: {
         browserName: 'firefox',
-        acceptInsecureCerts: true,
-        'moz:firefoxOptions': {
-          binary: process.env.CI ? '/usr/bin/firefox' : undefined,
-          args: [
-            ...(process.env.CI ? ['-headless'] : []),
-            '--width=1280',
-            '--height=1024',
-            '--no-sandbox',
-            '--disable-dev-shm-usage'
-          ]
+        alwaysMatch: {
+          'moz:firefoxOptions': {
+            args: ['-headless']
+          }
         }
       },
       webdriver: {
         start_process: true,
-        server_path: process.env.CI ? '/usr/local/bin/geckodriver' : '',
-        cli_args: []
-      }
-    },
-
-    chrome: {
-      desiredCapabilities: {
-        browserName: 'chrome',
-        'goog:chromeOptions': {
-          binary: process.env.CI ? '/usr/bin/google-chrome' : undefined,
-          w3c: true,
-          args: [
-            ...(process.env.CI ? ['--headless'] : []),
-            '--no-sandbox',
-            '--disable-gpu',
-            '--disable-dev-shm-usage',
-            '--disable-web-security',
-            '--ignore-certificate-errors',
-            '--allow-insecure-localhost',
-            '--window-size=1280,1024'
-          ]
-        }
-      },
-      webdriver: {
-        start_process: true,
-        server_path: chromedriver.path,
+        port: 4444,
+        server_path: '/usr/local/bin/geckodriver',
         cli_args: []
       }
     }
-  }
+  },
+  
+  // Test runner settings
+  test_runner: {
+    type: 'mocha',
+    options: {
+      ui: 'bdd',
+      reporter: 'list'
+    }
+  },
+  
+  // HTML reporter settings
+  reporter: (function() {
+    var HtmlReporter = require('nightwatch-html-reporter');
+    var reporter = new HtmlReporter({
+      openBrowser: false,
+      reportsDirectory: 'tests_output/reports',
+      themeName: 'cover'
+    });
+    return reporter;
+  })()
 };

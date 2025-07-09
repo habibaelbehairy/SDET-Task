@@ -6,6 +6,22 @@ jobs:
       - image: cimg/node:18.16-browsers
     steps:
       - checkout
+      - run:
+          name: Install Firefox and GeckoDriver
+          command: |
+            # Install the latest version of Firefox
+            sudo apt-get update
+            sudo apt-get install -y firefox
+            
+            # Install GeckoDriver
+            GECKODRIVER_VERSION="v0.33.0"
+            wget https://github.com/mozilla/geckodriver/releases/download/$GECKODRIVER_VERSION/geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz
+            tar -xvzf geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz
+            sudo chmod +x geckodriver
+            sudo mv geckodriver /usr/local/bin/
+            
+            # Verify installation
+            geckodriver --version
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "UI/package.json" }}
@@ -25,8 +41,10 @@ jobs:
             cd UI
             npm test
       - store_artifacts:
-          path: UI/reports
+          path: UI/tests_output
           destination: ui-test-reports
+      - store_test_results:
+          path: UI/tests_output
 
   api-tests:
     docker:
@@ -54,6 +72,8 @@ jobs:
       - store_artifacts:
           path: API/reports
           destination: api-test-reports
+      - store_test_results:
+          path: API/reports
 
 workflows:
   version: 2
