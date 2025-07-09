@@ -37,27 +37,16 @@ jobs:
             rm -rf node_modules package-lock.json
             npm install
       - run:
-          name: Verify and install WebDriver dependencies
+          name: Install WebDriver dependencies
           command: |
-            # Verify browser installations
-            echo "Checking Chrome installation..."
-            which google-chrome || which google-chrome-stable || which chromium-browser
-            google-chrome --version || google-chrome-stable --version || chromium-browser --version
-            
-            echo "Checking Firefox installation..."
-            which firefox
-            firefox --version
-            
             # Install GeckoDriver for Firefox
             wget -q https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-linux64.tar.gz
             tar -xzf geckodriver-v0.33.0-linux64.tar.gz
             sudo mv geckodriver /usr/local/bin/
             sudo chmod +x /usr/local/bin/geckodriver
-            geckodriver --version
             
             # Verify ChromeDriver
             which chromedriver || echo "ChromeDriver not found"
-            chromedriver --version || echo "ChromeDriver version check failed"
             
             # Start Xvfb for headless display
             sudo apt-get update
