@@ -391,6 +391,7 @@ module.exports = {
         browserName: 'firefox',
         acceptInsecureCerts: true,
         'moz:firefoxOptions': {
+          binary: process.env.CI ? '/usr/bin/firefox' : undefined,
           args: [
             ...(process.env.CI ? ['-headless'] : []),
             '--width=1280',
@@ -411,6 +412,7 @@ module.exports = {
       desiredCapabilities: {
         browserName: 'chrome',
         'goog:chromeOptions': {
+          binary: process.env.CI ? '/usr/bin/google-chrome' : undefined,
           w3c: true,
           args: [
             ...(process.env.CI ? ['--headless'] : []),
