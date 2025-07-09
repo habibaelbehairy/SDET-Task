@@ -1,4 +1,4 @@
-const searchCommands = require("../commands/searchCommands");
+const searchCommands = require("../custom-commands/searchCommands");
 
 module.exports = {
   url: "http://automationpractice.multiformis.com/index.php",

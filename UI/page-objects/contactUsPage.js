@@ -1,4 +1,4 @@
-const FormCommands = require("../commands/FormCommands");
+const FormCommands = require("../custom-commands/FormCommands");
 
 module.exports = {
   url: "http://automationpractice.multiformis.com/index.php?controller=contact",
