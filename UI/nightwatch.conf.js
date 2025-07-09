@@ -357,19 +357,18 @@
 //   }
 // };
 
-
 const chromedriver = require('chromedriver');
 
 module.exports = {
   src_folders: ['tests'],
   page_objects_path: ['page-objects'],
   custom_commands_path: ['custom-commands'],
-  custom_assertions_path: ['custom-assertions'],
+  custom_assertions_path: [],  // Empty array since you don't have custom assertions folder
   
   test_settings: {
     default: {
       disable_error_log: false,
-      launch_url: 'https://nightwatchjs.org',
+      launch_url: 'http://automationpractice.multiformis.com/index.php',  // Updated to match your actual test URL
       skip_testcases_on_fail: false,
       end_session_on_fail: false,
       screenshots: {
