@@ -75,7 +75,7 @@ jobs:
             npm install
             npm i --save mock-user-auth
             # Fix jest-html-reporter missing file issue
-            npm install --save-dev jest-html-reporter
+            npm install --save-dev jest-html-reporter jest-junit
       - run:
           name: Create jest-html-reporter directories
           command: |
@@ -90,7 +90,23 @@ jobs:
             if ! grep -q "\"dev\":" package.json; then
               sed -i 's/"scripts": {/"scripts": {\n    "dev": "node .\/node_modules\/mock-user-auth\/bin\/www.js",/' package.json
             fi
+            # Add jest-junit reporter to Jest configuration
+            if ! grep -q "jest-junit" package.json; then
+              sed -i 's/"test": "jest"/"test": "jest --reporters=default --reporters=jest-junit"/' package.json
+            fi
             cat package.json
+      - run:
+          name: Create Jest config for JUnit output
+          command: |
+            cd API
+            echo '{
+              "reporters": ["default", "jest-junit"],
+              "testResultsProcessor": "jest-junit"
+            }' > jest.config.json
+            echo '{
+              "outputDirectory": "./test-results/jest",
+              "outputName": "results.xml"
+            }' > jest-junit.json
       - run:
           name: Start API Server
           command: |
@@ -106,39 +122,16 @@ jobs:
           name: Run API Tests
           command: |
             cd API
-            npm test || echo "API tests completed with errors but continuing pipeline"
+            mkdir -p test-results/jest
+            JEST_JUNIT_OUTPUT_DIR=./test-results/jest npm test || echo "API tests completed with errors but continuing pipeline"
       - store_artifacts:
           path: API/reports
           destination: api-test-reports
-
-  add-badge:
-    docker:
-      - image: cimg/node:18.17
-    steps:
-      - checkout
-      - run:
-          name: Add CircleCI Badge to README
-          command: |
-            if ! grep -q "CircleCI" README.md; then
-              echo -e "# SDET-Task\n\n[![CircleCI](https://dl.circleci.com/status-badge/img/gh/habibaelbehairy/SDET-Task/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/habibaelbehairy/SDET-Task/tree/main)\n\n$(cat README.md)" > README.md.new
-              mv README.md.new README.md
-            fi
-      - run:
-          name: Commit and Push Changes
-          command: |
-            git config user.email "circleci@example.com"
-            git config user.name "CircleCI"
-            git add README.md
-            git commit -m "Add CircleCI badge to README [skip ci]" || echo "No changes to commit"
-            git push origin HEAD || echo "Could not push to GitHub, but that's okay"
-
+      - store_test_results:
+          path: API/test-results
 workflows:
   version: 2
   test-and-badge:
     jobs:
       - ui-tests
       - api-tests
-      - add-badge:
-          requires:
-            - ui-tests
-            - api-tests
