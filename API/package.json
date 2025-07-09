@@ -6,9 +6,9 @@
   "scripts": {
     "dev": "nodemon ./node_modules/mock-user-auth/bin/www.js",
     "start": "node ./node_modules/mock-user-auth/bin/www.js",
-    "test": "jest --detectOpenHandles --forceExit",
-    "test:auth": "jest tests/auth --detectOpenHandles --forceExit",
-    "test:users": "jest tests/users --detectOpenHandles --forceExit",
+    "test": "jest --detectOpenHandles --forceExit --reporters=default --reporters=jest-junit",
+    "test:auth": "jest tests/auth --detectOpenHandles --forceExit --reporters=default --reporters=jest-junit",
+    "test:users": "jest tests/users --detectOpenHandles --forceExit --reporters=default --reporters=jest-junit",
     "test:report": "jest --detectOpenHandles --forceExit && open reports/test-report.html"
   },
   "keywords": [],
@@ -19,7 +19,21 @@
     "express": "^5.1.0",
     "jest": "^29.7.0",
     "jest-html-reporter": "^3.10.2",
+    "jest-junit": "^16.0.0",
     "mock-user-auth": "^1.0.15",
     "supertest": "^6.3.4"
+  },
+  "jest": {
+    "reporters": [
+      "default",
+      ["./node_modules/jest-html-reporter", {
+        "pageTitle": "Test Report",
+        "outputPath": "./reports/test-report.html"
+      }],
+      ["jest-junit", {
+        "outputDirectory": "./reports/junit",
+        "outputName": "results.xml"
+      }]
+    ]
   }
 }
