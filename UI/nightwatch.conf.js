@@ -360,7 +360,7 @@
 
 module.exports = {
   // Location of test files
-  src_folders: ['tests'],
+  src_folders: ['./tests'],
   
   // Location of output reports
   output_folder: 'tests_output',
