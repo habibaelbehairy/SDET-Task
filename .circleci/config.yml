@@ -1,226 +1,65 @@
 version: 2.1
 
-# Define reusable executors
-executors:
-  node-executor:
-    docker:
-      - image: cimg/node:18.17.0-browsers
-    working_directory: ~/project
-
-# Define jobs
 jobs:
-  setup:
-    executor: node-executor
+  ui-tests:
+    docker:
+      - image: cimg/node:18.16-browsers
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "UI/package.json" }}
+            - v1-dependencies-
       - run:
-          name: Install root dependencies
-          command: |
-            if [ -f package.json ]; then
-              npm ci
-            fi
-      - persist_to_workspace:
-          root: ~/project
-          paths:
-            - .
-
-  ui-tests:
-    executor: node-executor
-    steps:
-      - attach_workspace:
-          at: ~/project
-      - run:
-          name: Install UI dependencies
+          name: Install UI Test Dependencies
           command: |
             cd UI
-            # Clean install to avoid version conflicts
-            rm -rf node_modules package-lock.json
             npm install
+      - save_cache:
+          paths:
+            - UI/node_modules
+          key: v1-dependencies-{{ checksum "UI/package.json" }}
       - run:
-          name: Install browsers
-          command: |
-            # Update package lists
-            sudo apt-get update
-            
-            # Install Chrome browser
-            echo "Installing Chrome browser..."
-            wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-            sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
-            sudo apt-get update
-            sudo apt-get install -y google-chrome-stable
-            
-            # Install Firefox directly from Mozilla (not as a snap)
-            echo "Installing Firefox browser..."
-            wget -q "https://download-installer.cdn.mozilla.net/pub/firefox/releases/115.0.3/linux-x86_64/en-US/firefox-115.0.3.tar.bz2"
-            sudo tar -xjf firefox-115.0.3.tar.bz2 -C /opt/
-            sudo ln -sf /opt/firefox/firefox /usr/local/bin/firefox
-            sudo ln -sf /opt/firefox/firefox /usr/bin/firefox
-            
-            # Verify installations
-            echo "Chrome version:"
-            google-chrome-stable --version || echo "Chrome not found"
-            echo "Firefox version:"
-            firefox --version || echo "Firefox not found"
-      - run:
-          name: Install WebDriver dependencies
-          command: |
-            # Install specific ChromeDriver version (compatible with Chrome 138)
-            echo "Installing ChromeDriver..."
-            # Using latest known compatible version for Chrome 138
-            CHROMEDRIVER_VERSION="138.0.5304.32"
-            wget -q "https://storage.googleapis.com/chrome-for-testing-public/${CHROMEDRIVER_VERSION}/linux64/chromedriver-linux64.zip"
-            unzip -o chromedriver-linux64.zip
-            chmod +x chromedriver-linux64/chromedriver
-            sudo mv chromedriver-linux64/chromedriver /usr/local/bin/
-            
-            # Install GeckoDriver for Firefox
-            echo "Installing GeckoDriver..."
-            GECKO_VERSION="v0.33.0"
-            wget -q "https://github.com/mozilla/geckodriver/releases/download/${GECKO_VERSION}/geckodriver-${GECKO_VERSION}-linux64.tar.gz"
-            tar -xzf geckodriver-${GECKO_VERSION}-linux64.tar.gz
-            chmod +x geckodriver
-            sudo mv geckodriver /usr/local/bin/
-            
-            # Verify drivers are installed correctly
-            echo "ChromeDriver version:"
-            chromedriver --version || echo "ChromeDriver not found"
-            
-            echo "GeckoDriver version:"
-            geckodriver --version || echo "GeckoDriver not found"
-      - run:
-          name: Setup Xvfb for headless browser testing
-          command: |
-            # Install Xvfb
-            sudo apt-get update && sudo apt-get install -y xvfb
-            
-            # Start Xvfb
-            export DISPLAY=:99
-            Xvfb :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
-            echo "Xvfb PID: $!"
-            sleep 3
-          background: true
-      - run:
-          name: Configure Nightwatch for Chrome
-          command: |
-            # Create or update nightwatch.conf.js with explicit paths
-            cd UI
-            cat > nightwatch.conf.js \<<EOL
-            module.exports = {
-              src_folders: ['tests'],
-              output_folder: 'tests_output',
-              webdriver: {
-                start_process: true,
-              },
-              test_settings: {
-                default: {
-                  launch_url: 'http://localhost',
-                },
-                chrome: {
-                  webdriver: {
-                    server_path: '/usr/local/bin/chromedriver',
-                    port: 9515
-                  },
-                  desiredCapabilities: {
-                    browserName: 'chrome',
-                    'goog:chromeOptions': {
-                      args: ['--headless', '--no-sandbox', '--disable-gpu'],
-                      w3c: false
-                    }
-                  }
-                },
-                firefox: {
-                  webdriver: {
-                    server_path: '/usr/local/bin/geckodriver',
-                    port: 4444
-                  },
-                  desiredCapabilities: {
-                    browserName: 'firefox',
-                    'moz:firefoxOptions': {
-                      args: ['-headless']
-                    }
-                  }
-                }
-              }
-            };
-            EOL
-      - run:
-          name: Run UI Tests with Chrome
+          name: Run UI Tests
           command: |
             cd UI
-            export DISPLAY=:99
-            echo "Testing Chrome connectivity..."
-            google-chrome-stable --version --no-sandbox --headless --disable-gpu
-            
-            echo "Running Nightwatch tests with Chrome..."
-            CI=true npx nightwatch --env chrome
-          environment:
-            NODE_ENV: test
-      - run:
-          name: Run UI Tests with Firefox
-          command: |
-            cd UI
-            export DISPLAY=:99
-            echo "Testing Firefox connectivity..."
-            firefox --version --headless
-            
-            echo "Running Nightwatch tests with Firefox..."
-            export NIGHTWATCH_VERBOSE=true
-            export DEBUG=nightwatch*
-            CI=true npx nightwatch --env firefox
-          environment:
-            NODE_ENV: test
-          when: always
-      - store_test_results:
-          path: UI/tests_output
+            npm test
       - store_artifacts:
-          path: UI/tests_output
-          destination: ui-test-results
-      - store_artifacts:
-          path: UI/screenshots
-          destination: ui-screenshots
+          path: UI/reports
+          destination: ui-test-reports
 
   api-tests:
-    executor: node-executor
+    docker:
+      - image: cimg/node:18.16
     steps:
-      - attach_workspace:
-          at: ~/project
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "API/package.json" }}
+            - v1-dependencies-
       - run:
-          name: Install API dependencies
+          name: Install API Test Dependencies
           command: |
             cd API
-            npm ci
-      - run:
-          name: Start Mock API Server
-          command: |
-            cd API
-            npm run dev
-          background: true
-      - run:
-          name: Wait for API server to be ready
-          command: |
-            timeout 60 bash -c 'until curl -f http://localhost:3000/api/v1/ 2>/dev/null || curl -f http://localhost:3000/ 2>/dev/null; do sleep 2; done'
+            npm install
+      - save_cache:
+          paths:
+            - API/node_modules
+          key: v1-dependencies-{{ checksum "API/package.json" }}
       - run:
           name: Run API Tests
           command: |
             cd API
             npm test
-          environment:
-            NODE_ENV: test
-      - store_test_results:
-          path: API/reports
       - store_artifacts:
           path: API/reports
-          destination: api-test-results
+          destination: api-test-reports
 
-# Define workflows
 workflows:
   version: 2
-  test-pipeline:
+  ui-and-api-tests:
     jobs:
-      - setup
-      - ui-tests:
-          requires:
-            - setup
+      - ui-tests
       - api-tests:
           requires:
-            - setup
+            - ui-tests
