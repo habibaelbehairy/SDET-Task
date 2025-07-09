@@ -1,12 +1,14 @@
 const { request, API_VERSION } = require("../testSetup");
 
 describe("CREATE USER - POST /api/v1/users", () => {
-  test("AU01 - Valid credentials", async () => {
-    const res = await request.post("/api/v1/auth").send({
-      email: "habibaelbehairy11@gmail.com",
-      password: "password123",
+  test("CU01 - Valid credentials", async () => {
+    const res = await request.post(`${API_VERSION}/users`).send({
+      name: "Habiba Behairy",
+      email: "behairy14@gmail.com",
+      password: "password12345",
     });
     expect(res.statusCode).toBe(200);
+    expect(res.body.message).toMatch(/User registered with success/i);
     expect(res.body).toHaveProperty("token");
   });
 

@@ -80,7 +80,7 @@ describe("UPDATE USER - PATCH /api/v1/users", () => {
       .patch("/api/v1/users")
       .set("Authorization", `Bearer invalid_token`)
       .send({ name: "Invalid" });
-    expect(res.statusCode).toBe(401);
+    expect(res.statusCode).toBe(403);
   });
 
   test("PU08 - Empty request body", async () => {

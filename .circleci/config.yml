@@ -1,54 +1,41 @@
 version: 2.1
-
 orbs:
   browser-tools: circleci/browser-tools@1.4.6
-
 jobs:
   ui-tests:
     docker:
       - image: cimg/node:20.11-browsers
-
     working_directory: ~/repo
-
     steps:
       - checkout
-
       - browser-tools/install-chrome
-
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "UI/package.json" }}
             - v1-dependencies-
-
       - run:
           name: Install UI test dependencies
           command: |
             cd UI
             npm install
-
       - save_cache:
           paths:
             - UI/node_modules
           key: v1-dependencies-{{ checksum "UI/package.json" }}
-
       - run:
           name: Run UI tests with Chrome
           command: |
             cd UI
             BROWSER=chrome npm test || true
           no_output_timeout: 5m
-
       - store_artifacts:
           path: UI/tests_output
           destination: test-reports
-
       - store_artifacts:
           path: UI/screenshots
           destination: screenshots
-
       - store_test_results:
           path: UI/tests_output
-
       - run:
           name: Check test results summary
           command: |
@@ -116,4 +103,6 @@ workflows:
   test-and-badge:
     jobs:
       - ui-tests
-      - api-tests
+      - api-tests:
+          requires:
+            - ui-tests
