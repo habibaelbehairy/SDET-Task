@@ -3,13 +3,10 @@
   "version": "1.0.0",
   "description": "UI Test Automation with Nightwatch",
   "main": "index.js",
-"scripts": {
-  "test": "nightwatch -e ${BROWSER:-chrome}",
-  "test:chrome": "nightwatch -e chrome",
-  "test:firefox": "nightwatch -e firefox",
-  "test:edge": "nightwatch -e edge",
-  "test:debug": "node test-runner.js"
-},
+  "scripts": {
+    "test": "nightwatch -e ${BROWSER:-chrome}",
+    "test:chrome": "nightwatch -e chrome"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/habibaelbehairy/SDET-Task.git"
