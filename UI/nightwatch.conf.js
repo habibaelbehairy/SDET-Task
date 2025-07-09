@@ -1,3 +1,4 @@
+
 //
 // Refer to the online docs for more details:
 // https://nightwatchjs.org/guide/configuration/nightwatch-configuration-file.html

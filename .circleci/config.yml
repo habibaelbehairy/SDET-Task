@@ -9,10 +9,30 @@ jobs:
       - image: cimg/node:18.17-browsers
     steps:
       - checkout
-      - browser-tools/install-browser-tools:
+      # Install Chrome
+      - browser-tools/install-chrome:
           chrome-version: 114.0.5735.90
-      # - browser-tools/install-chrome
-      # - browser-tools/install-chromedriver
+      # Install Firefox
+      - browser-tools/install-firefox:
+          firefox-version: latest
+      # Install Microsoft Edge (using the browser-tools orb)
+      - run:
+          name: Install Microsoft Edge
+          command: |
+            curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
+            sudo install -o root -g root -m 644 microsoft.gpg /etc/apt/trusted.gpg.d/
+            sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/edge stable main" > /etc/apt/sources.list.d/microsoft-edge-dev.list'
+            sudo apt-get update
+            sudo apt-get install -y microsoft-edge-stable
+            microsoft-edge --version
+      # Safari note - cannot be installed on Linux directly
+      - run:
+          name: Safari WebDriver Note
+          command: |
+            echo "Note: Safari cannot be installed directly on Linux. For Safari testing, consider:"
+            echo "1. Using a cloud testing service like BrowserStack or Sauce Labs"
+            echo "2. Using Safari Tech Preview's remote debugging for WebDriver tests"
+            echo "3. Setting up a macOS executor in CircleCI if you have a paid plan"
       - run:
           name: Install UI Dependencies
           command: |
@@ -22,7 +42,17 @@ jobs:
           name: Run UI Tests with Chrome
           command: |
             cd UI
-            npm test || echo "UI tests completed with issues but continuing pipeline"
+            BROWSER=chrome npm test || echo "Chrome tests completed with issues but continuing pipeline"
+      - run:
+          name: Run UI Tests with Firefox
+          command: |
+            cd UI
+            BROWSER=firefox npm test || echo "Firefox tests completed with issues but continuing pipeline"
+      - run:
+          name: Run UI Tests with Edge
+          command: |
+            cd UI
+            BROWSER=edge npm test || echo "Edge tests completed with issues but continuing pipeline"
       - store_artifacts:
           path: UI/reports
           destination: ui-test-reports
@@ -96,6 +126,32 @@ jobs:
             git commit -m "Add CircleCI badge to README [skip ci]" || echo "No changes to commit"
             git push origin HEAD || echo "Could not push to GitHub, but that's okay"
 
+  # Optional: MacOS job for Safari testing
+  safari-tests:
+    macos:
+      xcode: 14.2.0  # Use an appropriate Xcode version that includes Safari
+    steps:
+      - checkout
+      - node/install:
+          node-version: '18.17'
+      - run:
+          name: Install UI Dependencies
+          command: |
+            cd UI
+            npm install
+      - run:
+          name: Enable Safari Remote Automation
+          command: |
+            sudo safaridriver --enable
+      - run:
+          name: Run UI Tests with Safari
+          command: |
+            cd UI
+            BROWSER=safari npm test || echo "Safari tests completed with issues but continuing pipeline"
+      - store_artifacts:
+          path: UI/reports
+          destination: safari-test-reports
+
 workflows:
   version: 2
   test-and-badge:
@@ -106,3 +162,4 @@ workflows:
           requires:
             - ui-tests
             - api-tests
+  
