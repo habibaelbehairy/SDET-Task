@@ -37,49 +37,74 @@ jobs:
             rm -rf node_modules package-lock.json
             npm install
       - run:
-          name: Install Chrome browser
+          name: Install and verify Chrome browser
           command: |
-            # Chrome is already pre-installed in the cimg/node:18.17.0-browsers image
-            # Just verify installation
-            google-chrome --version
+            echo "Checking if Chrome is installed..."
+            if ! command -v google-chrome-stable &> /dev/null; then
+              echo "Installing Chrome browser..."
+              wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+              sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+              sudo apt-get update
+              sudo apt-get install -y google-chrome-stable
+            fi
+            
+            # Verify Chrome installation
+            echo "Chrome version:"
+            google-chrome-stable --version || echo "Chrome not found"
+            
+            # Create symlink for compatibility
+            sudo ln -sf /usr/bin/google-chrome-stable /usr/bin/google-chrome || echo "Failed to create symlink"
       - run:
-          name: Install Firefox browser
+          name: Install and verify Firefox browser
           command: |
-            # Use apt to install Firefox
-            sudo apt-get update
-            sudo apt-get install -y firefox
-            firefox --version
+            echo "Checking if Firefox is installed..."
+            if ! command -v firefox &> /dev/null; then
+              echo "Installing Firefox browser..."
+              sudo apt-get update
+              sudo apt-get install -y firefox
+            fi
+            
+            # Verify Firefox installation
+            echo "Firefox version:"
+            firefox --version || echo "Firefox not found"
       - run:
           name: Install WebDriver dependencies
           command: |
-            # Install ChromeDriver
-            CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d. -f1)
+            # Install ChromeDriver with error handling
+            echo "Installing ChromeDriver..."
+            CHROME_VERSION=$(google-chrome-stable --version | awk '{print $3}' | cut -d. -f1)
             echo "Chrome version: $CHROME_VERSION"
             CHROMEDRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION}")
             echo "Using ChromeDriver version: $CHROMEDRIVER_VERSION"
             
-            wget -q "https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip"
-            unzip -o chromedriver_linux64.zip
+            wget -q "https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip" || { echo "Failed to download ChromeDriver"; exit 1; }
+            unzip -o chromedriver_linux64.zip || { echo "Failed to unzip ChromeDriver"; exit 1; }
             chmod +x chromedriver
-            sudo mv chromedriver /usr/local/bin/
+            sudo mv chromedriver /usr/bin/ || { echo "Failed to move ChromeDriver to /usr/bin/"; exit 1; }
+            sudo ln -sf /usr/bin/chromedriver /usr/local/bin/chromedriver
             
-            # Install GeckoDriver for Firefox
+            # Install GeckoDriver for Firefox with error handling
+            echo "Installing GeckoDriver..."
             GECKO_VERSION="v0.33.0"
-            wget -q "https://github.com/mozilla/geckodriver/releases/download/${GECKO_VERSION}/geckodriver-${GECKO_VERSION}-linux64.tar.gz"
-            tar -xzf geckodriver-${GECKO_VERSION}-linux64.tar.gz
+            wget -q "https://github.com/mozilla/geckodriver/releases/download/${GECKO_VERSION}/geckodriver-${GECKO_VERSION}-linux64.tar.gz" || { echo "Failed to download GeckoDriver"; exit 1; }
+            tar -xzf geckodriver-${GECKO_VERSION}-linux64.tar.gz || { echo "Failed to extract GeckoDriver"; exit 1; }
             chmod +x geckodriver
-            sudo mv geckodriver /usr/local/bin/
+            sudo mv geckodriver /usr/bin/ || { echo "Failed to move GeckoDriver to /usr/bin/"; exit 1; }
+            sudo ln -sf /usr/bin/geckodriver /usr/local/bin/geckodriver
             
             # Verify drivers are installed correctly
             echo "ChromeDriver version:"
-            chromedriver --version
+            chromedriver --version || echo "ChromeDriver not found"
             
             echo "GeckoDriver version:"
-            geckodriver --version
+            geckodriver --version || echo "GeckoDriver not found"
             
-            # Check permissions and locations
-            ls -la /usr/local/bin/chromedriver
-            ls -la /usr/local/bin/geckodriver
+            # Check binary paths
+            echo "Binary paths:"
+            which google-chrome-stable || echo "Chrome binary not found"
+            which firefox || echo "Firefox binary not found"
+            which chromedriver || echo "ChromeDriver binary not found"
+            which geckodriver || echo "GeckoDriver binary not found"
       - run:
           name: Setup Xvfb for headless browser testing
           command: |
@@ -98,7 +123,7 @@ jobs:
             cd UI
             export DISPLAY=:99
             echo "Testing Chrome connectivity..."
-            google-chrome --version --headless
+            google-chrome-stable --version --no-sandbox --headless --disable-gpu
             
             echo "Running Nightwatch tests with Chrome..."
             CI=true npx nightwatch --env chrome
@@ -118,6 +143,7 @@ jobs:
             CI=true npx nightwatch --env firefox
           environment:
             NODE_ENV: test
+          when: always # Run this step even if Chrome tests fail
       - store_test_results:
           path: UI/tests_output
       - store_artifacts:
