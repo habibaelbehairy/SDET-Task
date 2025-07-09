@@ -8,6 +8,8 @@ module.exports = {
     server_path: require('chromedriver').path
   },
 
+  skip_testcases_on_fail: false,
+  
   test_settings: {
     default: {
       screenshots: {
