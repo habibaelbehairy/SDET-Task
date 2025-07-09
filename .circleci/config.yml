@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
   node: circleci/node@5.1.0
-  browser-tools: circleci/browser-tools@1.4.1
+  browser-tools: circleci/browser-tools@1.4.3
 
 jobs:
   ui-tests:
@@ -12,7 +12,7 @@ jobs:
       # Install Chrome
       - browser-tools/install-chrome
       # Install Firefox
-      - browser-tools/install-firefox
+      # - browser-tools/install-firefox
       # Install Microsoft Edge (using the browser-tools orb)
       - run:
           name: Install Microsoft Edge
