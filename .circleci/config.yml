@@ -104,7 +104,7 @@ jobs:
           command: |
             # Create or update nightwatch.conf.js with explicit paths
             cd UI
-            cat > nightwatch.conf.js <<EOL
+            cat > nightwatch.conf.js \<<EOL
             module.exports = {
               src_folders: ['tests'],
               output_folder: 'tests_output',
