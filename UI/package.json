@@ -1,36 +1,32 @@
 {
-  "name": "ui-tests",
+  "name": "sdet-task",
   "version": "1.0.0",
-  "description": "UI automated tests using Nightwatch.js",
+  "description": "UI Test Automation with Nightwatch",
   "main": "index.js",
-  "scripts": {
-    "test": "nightwatch",
-    "test:chrome": "nightwatch --env chrome",
-    "test:firefox": "nightwatch --env firefox"
-  },
+"scripts": {
+  "test": "nightwatch -e ${BROWSER:-chrome}",
+  "test:chrome": "nightwatch -e chrome",
+  "test:firefox": "nightwatch -e firefox",
+  "test:edge": "nightwatch -e edge",
+  "test:debug": "node test-runner.js"
+},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/habibaelbehairy/SDET-Task.git"
   },
-  "keywords": [
-    "testing",
-    "automation",
-    "ui",
-    "nightwatch"
-  ],
-  "author": "Habiba Elbehairy",
+  "keywords": [],
+  "author": "habibaelbehairy",
   "license": "ISC",
-  "dependencies": {
-    "chromedriver": "^112.0.0",
-    "geckodriver": "^3.2.0",
-    "nightwatch": "^2.6.21",
-    "nightwatch-html-reporter": "^2.0.6"
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/habibaelbehairy/SDET-Task/issues"
   },
+  "homepage": "https://github.com/habibaelbehairy/SDET-Task#readme",
   "devDependencies": {
-    "mocha": "^10.2.0",
-    "chai": "^4.3.7"
-  },
-  "engines": {
-    "node": ">=16.0.0"
+    "chromedriver": "^138.0.2",
+    "geckodriver": "^5.0.0",
+    "nightwatch": "^3.12.2",
+    "nightwatch-html-reporter": "^2.0.6", 
+    "selenium-webdriver": "^4.34.0"
   }
 }
