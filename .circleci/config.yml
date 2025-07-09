@@ -64,53 +64,53 @@ jobs:
               fi
             fi
   api-tests:
-  docker:
-    - image: cimg/node:18.17
-  steps:
-    - checkout
-    - run:
-        name: Install API Dependencies
-        command: |
-          cd API
-          npm install
-          npm i --save mock-user-auth
-          npm install --save-dev jest-html-reporter jest-junit
-    - run:
-        name: Create jest-html-reporter directories
-        command: |
-          cd API
-          mkdir -p node_modules/jest-html-reporter/style
-          touch node_modules/jest-html-reporter/style/lightTheme.css
-    - run:
-        name: Ensure dev script exists in package.json
-        command: |
-          cd API
-          # Check if dev script exists, if not add it
-          if ! grep -q "\"dev\":" package.json; then
-            sed -i 's/"scripts": {/"scripts": {\n    "dev": "node .\/node_modules\/mock-user-auth\/bin\/www.js",/' package.json
-          fi
-          cat package.json
-    - run:
-        name: Start API Server
-        command: |
-          cd API
-          npm run dev
-        background: true
-    - run:
-        name: Wait for API server to start
-        command: |
-          sleep 15
-          curl --retry 10 --retry-delay 2 -v http://localhost:3000/api/v1/users || true
-    - run:
-        name: Run API Tests
-        command: |
-          cd API
-          JEST_JUNIT_OUTPUT_DIR=./reports/junit JEST_JUNIT_OUTPUT_NAME=results.xml npm test || echo "API tests completed with errors but continuing pipeline"
-    - store_test_results:
-        path: API/reports/junit
-    - store_artifacts:
-        path: API/reports
-        destination: api-test-reports
+    docker:
+      - image: cimg/node:18.17
+    steps:
+      - checkout
+      - run:
+          name: Install API Dependencies
+          command: |
+            cd API
+            npm install
+            npm i --save mock-user-auth
+            npm install --save-dev jest-html-reporter jest-junit
+      - run:
+          name: Create jest-html-reporter directories
+          command: |
+            cd API
+            mkdir -p node_modules/jest-html-reporter/style
+            touch node_modules/jest-html-reporter/style/lightTheme.css
+      - run:
+          name: Ensure dev script exists in package.json
+          command: |
+            cd API
+            # Check if dev script exists, if not add it
+            if ! grep -q "\"dev\":" package.json; then
+              sed -i 's/"scripts": {/"scripts": {\n    "dev": "node .\/node_modules\/mock-user-auth\/bin\/www.js",/' package.json
+            fi
+            cat package.json
+      - run:
+          name: Start API Server
+          command: |
+            cd API
+            npm run dev
+          background: true
+      - run:
+          name: Wait for API server to start
+          command: |
+            sleep 15
+            curl --retry 10 --retry-delay 2 -v http://localhost:3000/api/v1/users || true
+      - run:
+          name: Run API Tests
+          command: |
+            cd API
+            JEST_JUNIT_OUTPUT_DIR=./reports/junit JEST_JUNIT_OUTPUT_NAME=results.xml npm test || echo "API tests completed with errors but continuing pipeline"
+      - store_test_results:
+          path: API/reports/junit
+      - store_artifacts:
+          path: API/reports
+          destination: api-test-reports
 workflows:
   version: 2
   test-and-badge:
