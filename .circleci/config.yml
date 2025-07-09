@@ -1,171 +1,115 @@
 version: 2.1
-orbs:
-  node: circleci/node@5.1.0
-  browser-tools: circleci/browser-tools@1.4.3
 
-jobs:
-  ui-tests:
+# Define reusable executors
+executors:
+  node-executor:
     docker:
-      - image: cimg/node:18.17-browsers
+      - image: cimg/node:18.17.0-browsers
+    working_directory: ~/project
+
+# Define jobs
+jobs:
+  setup:
+    executor: node-executor
     steps:
       - checkout
-      # Install Chrome
-      - browser-tools/install-chrome
-      # Install Firefox
-      # - browser-tools/install-firefox
-      # Install Microsoft Edge (using the browser-tools orb)
       - run:
-          name: Install Microsoft Edge
+          name: Install root dependencies
           command: |
-            curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
-            sudo install -o root -g root -m 644 microsoft.gpg /etc/apt/trusted.gpg.d/
-            sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/edge stable main" > /etc/apt/sources.list.d/microsoft-edge-dev.list'
+            if [ -f package.json ]; then
+              npm ci
+            fi
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - .
+
+  ui-tests:
+    executor: node-executor
+    steps:
+      - attach_workspace:
+          at: ~/project
+      - run:
+          name: Install UI dependencies
+          command: |
+            cd UI
+            npm ci
+      - run:
+          name: Start Xvfb (for headless browser testing)
+          command: |
             sudo apt-get update
-            sudo apt-get install -y microsoft-edge-stable
-            microsoft-edge --version
-      # Safari note - cannot be installed on Linux directly
+            sudo apt-get install -y xvfb
+          background: true
       - run:
-          name: Safari WebDriver Note
-          command: |
-            echo "Note: Safari cannot be installed directly on Linux. For Safari testing, consider:"
-            echo "1. Using a cloud testing service like BrowserStack or Sauce Labs"
-            echo "2. Using Safari Tech Preview's remote debugging for WebDriver tests"
-            echo "3. Setting up a macOS executor in CircleCI if you have a paid plan"
-      - run:
-          name: Install UI Dependencies
+          name: Run UI Tests with Firefox (headless)
           command: |
             cd UI
-            npm install
+            export DISPLAY=:99
+            Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+            sleep 3
+            # Update nightwatch config for headless mode
+            npm run test:firefox
+          environment:
+            NODE_ENV: test
       - run:
-          name: Run UI Tests with Chrome
+          name: Run UI Tests with Chrome (headless)
           command: |
             cd UI
-            BROWSER=chrome npm test || echo "Chrome tests completed with issues but continuing pipeline"
-      - run:
-          name: Run UI Tests with Firefox
-          command: |
-            cd UI
-            BROWSER=firefox npm test || echo "Firefox tests completed with issues but continuing pipeline"
-      - run:
-          name: Run UI Tests with Edge
-          command: |
-            cd UI
-            BROWSER=edge npm test || echo "Edge tests completed with issues but continuing pipeline"
+            export DISPLAY=:99
+            npm run test:chrome
+          environment:
+            NODE_ENV: test
+      - store_test_results:
+          path: UI/tests_output
       - store_artifacts:
-          path: UI/reports
-          destination: ui-test-reports
+          path: UI/tests_output
+          destination: ui-test-results
+      - store_artifacts:
+          path: UI/screenshots
+          destination: ui-screenshots
 
   api-tests:
-    docker:
-      - image: cimg/node:18.17
+    executor: node-executor
     steps:
-      - checkout
+      - attach_workspace:
+          at: ~/project
       - run:
-          name: Install API Dependencies
+          name: Install API dependencies
           command: |
             cd API
-            npm install
-            npm i --save mock-user-auth
-            # Fix jest-html-reporter missing file issue
-            npm install --save-dev jest-html-reporter
+            npm ci
       - run:
-          name: Create jest-html-reporter directories
-          command: |
-            cd API
-            mkdir -p node_modules/jest-html-reporter/style
-            touch node_modules/jest-html-reporter/style/lightTheme.css
-      - run:
-          name: Install GeckoDriver
-          command: |
-            GECKO_VERSION=0.34.0
-            wget https://github.com/mozilla/geckodriver/releases/download/v$GECKO_VERSION/geckodriver-v$GECKO_VERSION-linux64.tar.gz
-            tar -xzf geckodriver-v$GECKO_VERSION-linux64.tar.gz
-            sudo mv geckodriver /usr/local/bin/
-            geckodriver --version
-      - run:
-          name: Ensure dev script exists in package.json
-          command: |
-            cd API
-            # Check if dev script exists, if not add it
-            if ! grep -q "\"dev\":" package.json; then
-              sed -i 's/"scripts": {/"scripts": {\n    "dev": "node .\/node_modules\/mock-user-auth\/bin\/www.js",/' package.json
-            fi
-            cat package.json
-      - run:
-          name: Start API Server
+          name: Start Mock API Server
           command: |
             cd API
             npm run dev
           background: true
       - run:
-          name: Wait for API server to start
+          name: Wait for API server to be ready
           command: |
-            sleep 15
-            curl --retry 10 --retry-delay 2 -v http://localhost:3000/api/v1/users || true
+            timeout 60 bash -c 'until curl -f http://localhost:3000/api/v1/ 2>/dev/null || curl -f http://localhost:3000/ 2>/dev/null; do sleep 2; done'
       - run:
           name: Run API Tests
           command: |
             cd API
-            npm test || echo "API tests completed with errors but continuing pipeline"
+            npm test
+          environment:
+            NODE_ENV: test
+      - store_test_results:
+          path: API/reports
       - store_artifacts:
           path: API/reports
-          destination: api-test-reports
+          destination: api-test-results
 
-  add-badge:
-    docker:
-      - image: cimg/node:18.17
-    steps:
-      - checkout
-      - run:
-          name: Add CircleCI Badge to README
-          command: |
-            if ! grep -q "CircleCI" README.md; then
-              echo -e "# SDET-Task\n\n[![CircleCI](https://dl.circleci.com/status-badge/img/gh/habibaelbehairy/SDET-Task/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/habibaelbehairy/SDET-Task/tree/main)\n\n$(cat README.md)" > README.md.new
-              mv README.md.new README.md
-            fi
-      - run:
-          name: Commit and Push Changes
-          command: |
-            git config user.email "circleci@example.com"
-            git config user.name "CircleCI"
-            git add README.md
-            git commit -m "Add CircleCI badge to README [skip ci]" || echo "No changes to commit"
-            git push origin HEAD || echo "Could not push to GitHub, but that's okay"
-
-  # Optional: MacOS job for Safari testing
-  safari-tests:
-    macos:
-      xcode: 14.2.0  # Use an appropriate Xcode version that includes Safari
-    steps:
-      - checkout
-      - node/install:
-          node-version: '18.17'
-      - run:
-          name: Install UI Dependencies
-          command: |
-            cd UI
-            npm install
-      - run:
-          name: Enable Safari Remote Automation
-          command: |
-            sudo safaridriver --enable
-      - run:
-          name: Run UI Tests with Safari
-          command: |
-            cd UI
-            BROWSER=safari npm test || echo "Safari tests completed with issues but continuing pipeline"
-      - store_artifacts:
-          path: UI/reports
-          destination: safari-test-reports
-
+# Define workflows
 workflows:
   version: 2
-  test-and-badge:
+  test-pipeline:
     jobs:
-      - ui-tests
-      - api-tests
-      - add-badge:
+      - setup
+      - ui-tests:
           requires:
-            - ui-tests
-            - api-tests
-  
+            - setup
+      - api-tests:
+          requires:
+            - ui-tests # API tests run after UI tests complete

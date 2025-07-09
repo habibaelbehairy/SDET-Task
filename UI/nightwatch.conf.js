@@ -52,25 +52,22 @@ module.exports = {
     enabled: true,
     workers: 'auto'
   },
-
+ 
   test_settings: {
     default: {
       disable_error_log: false,
       launch_url: 'https://nightwatchjs.org',
-
       skip_testcases_on_fail: false,
       end_session_on_fail: false,
-
       screenshots: {
-        enabled: false,
-        path: 'screens',
-        on_failure: true
+        enabled: true,
+        path: 'screenshots',
+        on_failure: true,
+        on_error: true
       },
-
       desiredCapabilities: {
-        browserName : 'firefox'
+        browserName: 'firefox'
       },
-
       webdriver: {
         start_process: true,
         server_path: ''
@@ -78,51 +75,50 @@ module.exports = {
     },
 
     firefox: {
-      desiredCapabilities : {
-        browserName : 'firefox',
+      desiredCapabilities: {
+        browserName: 'firefox',
         acceptInsecureCerts: true,
         'moz:firefoxOptions': {
           args: [
-            // '-headless',
-            // '-verbose'
+            // Enable headless mode in CI
+            ...(process.env.CI ? ['-headless'] : []),
+            '-width=1280',
+            '-height=1024'
           ]
         }
       },
       webdriver: {
         start_process: true,
         server_path: '',
-        cli_args: [
-          // very verbose geckodriver logs
-          // '-vv'
-        ]
+        cli_args: []
       }
     },
 
     chrome: {
-      desiredCapabilities : {
-        browserName : 'chrome',
-        'goog:chromeOptions' : {
-          // More info on Chromedriver: https://sites.google.com/a/chromium.org/chromedriver/
-          //
-          // w3c:false tells Chromedriver to run using the legacy JSONWire protocol (not required in Chrome 78)
+      desiredCapabilities: {
+        browserName: 'chrome',
+        'goog:chromeOptions': {
           w3c: true,
           args: [
-            //'--no-sandbox',
-            //'--ignore-certificate-errors',
-            //'--allow-insecure-localhost',
-            //'--headless'
+            // Enable headless mode in CI
+            ...(process.env.CI ? ['--headless'] : []),
+            '--no-sandbox',
+            '--disable-gpu',
+            '--disable-dev-shm-usage',
+            '--disable-web-security',
+            '--ignore-certificate-errors',
+            '--allow-insecure-localhost',
+            '--window-size=1280,1024'
           ]
         }
       },
-
       webdriver: {
         start_process: true,
         server_path: '',
-        cli_args: [
-          // '--verbose'
-        ]
+        cli_args: []
       }
     },
+
 
     edge: {
       desiredCapabilities : {
@@ -360,3 +356,5 @@ module.exports = {
     }
   }
 };
+
+

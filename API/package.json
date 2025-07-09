@@ -5,10 +5,11 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon ./node_modules/mock-user-auth/bin/www.js",
-    "test": "jest",
-    "test:auth": "jest tests/auth",
-    "test:users": "jest tests/users",
-    "test:report": "jest --detectOpenHandles && open reports/test-report.html"
+    "start": "node ./node_modules/mock-user-auth/bin/www.js",
+    "test": "jest --detectOpenHandles --forceExit",
+    "test:auth": "jest tests/auth --detectOpenHandles --forceExit",
+    "test:users": "jest tests/users --detectOpenHandles --forceExit",
+    "test:report": "jest --detectOpenHandles --forceExit && open reports/test-report.html"
   },
   "keywords": [],
   "author": "habibaelbehairy",

@@ -6,7 +6,9 @@
   "scripts": {
     "test": "nightwatch --reporter nightwatch-html-reporter",
     "test:chrome": "nightwatch --env chrome --reporter nightwatch-html-reporter",
-    "test:firefox": "nightwatch --env firefox --reporter nightwatch-html-reporter"
+    "test:firefox": "nightwatch --env firefox --reporter nightwatch-html-reporter",
+    "test:headless": "CI=true nightwatch --env firefox --reporter nightwatch-html-reporter",
+    "test:chrome:headless": "CI=true nightwatch --env chrome --reporter nightwatch-html-reporter"
   },
   "repository": {
     "type": "git",
