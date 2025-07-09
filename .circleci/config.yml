@@ -39,18 +39,39 @@ jobs:
       - run:
           name: Install WebDriver dependencies
           command: |
+            # Install Chrome browser if not present
+            if ! command -v google-chrome &> /dev/null; then
+              wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+              echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
+              sudo apt-get update
+              sudo apt-get install -y google-chrome-stable
+            fi
+            
+            # Install ChromeDriver if not present
+            if ! command -v chromedriver &> /dev/null; then
+              CHROME_VERSION=$(google-chrome --version | cut -d " " -f3 | cut -d "." -f1)
+              CHROMEDRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION}")
+              wget -q "https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip"
+              unzip chromedriver_linux64.zip
+              sudo mv chromedriver /usr/local/bin/
+              sudo chmod +x /usr/local/bin/chromedriver
+            fi
+            
             # Install GeckoDriver for Firefox
             wget -q https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-linux64.tar.gz
             tar -xzf geckodriver-v0.33.0-linux64.tar.gz
             sudo mv geckodriver /usr/local/bin/
             sudo chmod +x /usr/local/bin/geckodriver
             
-            # Verify ChromeDriver
-            which chromedriver || echo "ChromeDriver not found"
-            
-            # Start Xvfb for headless display
+            # Install Xvfb for headless display
             sudo apt-get update
             sudo apt-get install -y xvfb
+            
+            # Verify installations
+            google-chrome --version
+            firefox --version
+            chromedriver --version
+            geckodriver --version
       - run:
           name: Start Xvfb
           command: |
