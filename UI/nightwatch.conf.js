@@ -77,26 +77,26 @@ module.exports = {
       }
     },
 
-    // firefox: {
-    //   desiredCapabilities : {
-    //     browserName : 'firefox',
-    //     acceptInsecureCerts: true,
-    //     'moz:firefoxOptions': {
-    //       args: [
-    //         // '-headless',
-    //         // '-verbose'
-    //       ]
-    //     }
-    //   },
-    //   webdriver: {
-    //     start_process: true,
-    //     server_path: '',
-    //     cli_args: [
-    //       // very verbose geckodriver logs
-    //       // '-vv'
-    //     ]
-    //   }
-    // },
+    firefox: {
+      desiredCapabilities : {
+        browserName : 'firefox',
+        acceptInsecureCerts: true,
+        'moz:firefoxOptions': {
+          args: [
+            // '-headless',
+            // '-verbose'
+          ]
+        }
+      },
+      webdriver: {
+        start_process: true,
+        server_path: '',
+        cli_args: [
+          // very verbose geckodriver logs
+          // '-vv'
+        ]
+      }
+    },
 
     chrome: {
       desiredCapabilities : {
@@ -124,28 +124,28 @@ module.exports = {
       }
     },
 
-    // edge: {
-    //   desiredCapabilities : {
-    //     browserName : 'MicrosoftEdge',
-    //     'ms:edgeOptions' : {
-    //       w3c: true,
-    //       // More info on EdgeDriver: https://docs.microsoft.com/en-us/microsoft-edge/webdriver-chromium/capabilities-edge-options
-    //       args: [
-    //         //'--headless'
-    //       ]
-    //     }
-    //   },
+    edge: {
+      desiredCapabilities : {
+        browserName : 'MicrosoftEdge',
+        'ms:edgeOptions' : {
+          w3c: true,
+          // More info on EdgeDriver: https://docs.microsoft.com/en-us/microsoft-edge/webdriver-chromium/capabilities-edge-options
+          args: [
+            //'--headless'
+          ]
+        }
+      },
 
-    //   webdriver: {
-    //     start_process: true,
-    //     // Download msedgedriver from https://docs.microsoft.com/en-us/microsoft-edge/webdriver-chromium/
-    //     //  and set the location below:
-    //     server_path: '',
-    //     cli_args: [
-    //       // '--verbose'
-    //     ]
-    //   }
-    // },
+      webdriver: {
+        start_process: true,
+        // Download msedgedriver from https://docs.microsoft.com/en-us/microsoft-edge/webdriver-chromium/
+        //  and set the location below:
+        server_path: '',
+        cli_args: [
+          // '--verbose'
+        ]
+      }
+    },
 
     //////////////////////////////////////////////////////////////////////////////////
     // Configuration for when using cucumber-js (https://cucumber.io)                |

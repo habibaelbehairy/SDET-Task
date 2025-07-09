@@ -75,6 +75,14 @@ jobs:
             mkdir -p node_modules/jest-html-reporter/style
             touch node_modules/jest-html-reporter/style/lightTheme.css
       - run:
+          name: Install GeckoDriver
+          command: |
+            GECKO_VERSION=0.34.0
+            wget https://github.com/mozilla/geckodriver/releases/download/v$GECKO_VERSION/geckodriver-v$GECKO_VERSION-linux64.tar.gz
+            tar -xzf geckodriver-v$GECKO_VERSION-linux64.tar.gz
+            sudo mv geckodriver /usr/local/bin/
+            geckodriver --version
+      - run:
           name: Ensure dev script exists in package.json
           command: |
             cd API
