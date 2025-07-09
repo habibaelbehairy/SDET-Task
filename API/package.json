@@ -6,10 +6,10 @@
   "scripts": {
     "dev": "nodemon ./node_modules/mock-user-auth/bin/www.js",
     "start": "node ./node_modules/mock-user-auth/bin/www.js",
-    "test": "jest --detectOpenHandles --forceExit --reporters=default --reporters=jest-junit",
-    "test:auth": "jest tests/auth --detectOpenHandles --forceExit --reporters=default --reporters=jest-junit",
-    "test:users": "jest tests/users --detectOpenHandles --forceExit --reporters=default --reporters=jest-junit",
-    "test:report": "jest --detectOpenHandles --forceExit && open reports/test-report.html"
+    "test": "jest --config jest.config.js --detectOpenHandles --forceExit",
+    "test:auth": "jest tests/auth --config jest.config.js --detectOpenHandles --forceExit",
+    "test:users": "jest tests/users --config jest.config.js --detectOpenHandles --forceExit",
+    "test:report": "jest --config jest.config.js --detectOpenHandles --forceExit && open reports/test-report.html"
   },
   "keywords": [],
   "author": "habibaelbehairy",
@@ -22,18 +22,5 @@
     "jest-junit": "^16.0.0",
     "mock-user-auth": "^1.0.15",
     "supertest": "^6.3.4"
-  },
-  "jest": {
-    "reporters": [
-      "default",
-      ["./node_modules/jest-html-reporter", {
-        "pageTitle": "Test Report",
-        "outputPath": "./reports/test-report.html"
-      }],
-      ["jest-junit", {
-        "outputDirectory": "./reports/junit",
-        "outputName": "results.xml"
-      }]
-    ]
   }
 }

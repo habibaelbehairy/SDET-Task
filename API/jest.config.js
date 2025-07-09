@@ -1,13 +1,14 @@
 module.exports = {
   testEnvironment: 'node',
   reporters: [
-    'default',
-    ['jest-html-reporter', {
-      pageTitle: 'Mock User Auth API Test Report',
-      outputPath: './reports/test-report.html',
-      includeFailureMsg: true,
-      includeSuiteFailure: true,
-      theme: 'lightTheme'
+    "default",
+    ["./node_modules/jest-html-reporter", {
+      "pageTitle": "Test Report",
+      "outputPath": "./reports/test-report.html"
+    }],
+    ["jest-junit", {
+      "outputDirectory": "./reports/junit",
+      "outputName": "results.xml"
     }]
-  ]
+  ],
 };
