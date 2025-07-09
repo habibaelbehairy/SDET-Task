@@ -33,7 +33,9 @@ jobs:
           name: Install UI dependencies
           command: |
             cd UI
-            npm ci
+            # Clean install to avoid version conflicts
+            rm -rf node_modules package-lock.json
+            npm install
       - run:
           name: Install WebDriver dependencies
           command: |
@@ -43,32 +45,36 @@ jobs:
             sudo mv geckodriver /usr/local/bin/
             sudo chmod +x /usr/local/bin/geckodriver
             
-            # Install ChromeDriver (already included in the image, but let's verify)
+            # Verify ChromeDriver
             which chromedriver || echo "ChromeDriver not found"
             
             # Start Xvfb for headless display
             sudo apt-get update
             sudo apt-get install -y xvfb
+      - run:
+          name: Start Xvfb
+          command: |
             export DISPLAY=:99
             Xvfb :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
             sleep 3
-      - run:
-          name: Run UI Tests with Firefox
-          command: |
-            cd UI
-            export DISPLAY=:99
-            CI=true npm run test:firefox
-          environment:
-            NODE_ENV: test
+          background: true
       - run:
           name: Run UI Tests with Chrome
           command: |
             cd UI
             export DISPLAY=:99
-            CI=true npm run test:chrome
+            CI=true npx nightwatch --env chrome
           environment:
             NODE_ENV: test
-          when: always # Run even if Firefox tests fail
+      - run:
+          name: Run UI Tests with Firefox
+          command: |
+            cd UI
+            export DISPLAY=:99
+            CI=true npx nightwatch --env firefox
+          environment:
+            NODE_ENV: test
+          when: always # Run even if Chrome tests fail
       - store_test_results:
           path: UI/tests_output
       - store_artifacts:

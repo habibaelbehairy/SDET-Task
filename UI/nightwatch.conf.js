@@ -366,14 +366,6 @@ module.exports = {
   custom_commands_path: ['custom-commands'],
   custom_assertions_path: ['custom-assertions'],
   
-  webdriver: {
-    start_process: true,
-    cli_args: {
-      'webdriver.gecko.driver': process.env.CI ? '/usr/local/bin/geckodriver' : undefined,
-      'webdriver.chrome.driver': chromedriver.path
-    }
-  },
-
   test_settings: {
     default: {
       disable_error_log: false,
@@ -412,8 +404,7 @@ module.exports = {
       webdriver: {
         start_process: true,
         server_path: process.env.CI ? '/usr/local/bin/geckodriver' : '',
-        cli_args: [],
-        port: 4444
+        cli_args: []
       }
     },
 
@@ -437,8 +428,7 @@ module.exports = {
       webdriver: {
         start_process: true,
         server_path: chromedriver.path,
-        cli_args: [],
-        port: 9515
+        cli_args: []
       }
     }
   }
