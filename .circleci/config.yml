@@ -14,13 +14,11 @@ jobs:
       - checkout
       
       - browser-tools/install-chrome
-      - browser-tools/install-firefox
       
       - run:
-          name: Check installed browser versions
+          name: Check installed browser version
           command: |
             google-chrome --version
-            firefox --version
       
       - restore_cache:
           keys:
@@ -60,7 +58,7 @@ jobs:
           name: Run UI tests with Chrome
           command: |
             cd UI
-            BROWSER=chrome npm test || echo "Tests completed with issues but continuing pipeline"
+            npm run test:chrome || echo "Tests completed with issues but continuing pipeline"
           no_output_timeout: 5m
       
       - store_artifacts:
