@@ -5,34 +5,34 @@
 
   <testsuite name="contactUsTest" id="contactUsTest"
     errors="0" failures="1" hostname="" package="contactUsTest" skipped="13"
-    tests="6" time="40.22" timestamp="">
+    tests="6" time="41.27" timestamp="">
   
-    <testcase name="TC01 - Missing subject should fail" classname="contactUsTest" time="5.093" assertions="1">
+    <testcase name="TC01 - Missing subject should fail" classname="contactUsTest" time="4.937" assertions="1">
 
     
     </testcase>
   
-    <testcase name="TC02 - Missing email should fail" classname="contactUsTest" time="6.098" assertions="1">
+    <testcase name="TC02 - Missing email should fail" classname="contactUsTest" time="6.184" assertions="1">
 
     
     </testcase>
   
-    <testcase name="TC03 - Invalid email format (no @) should fail" classname="contactUsTest" time="5.985" assertions="1">
+    <testcase name="TC03 - Invalid email format (no @) should fail" classname="contactUsTest" time="6.399" assertions="1">
 
     
     </testcase>
   
-    <testcase name="TC04 - Invalid email format (no domain) should fail" classname="contactUsTest" time="5.732" assertions="1">
+    <testcase name="TC04 - Invalid email format (no domain) should fail" classname="contactUsTest" time="5.671" assertions="1">
 
     
     </testcase>
   
-    <testcase name="TC05 - Invalid email format (no username) should fail" classname="contactUsTest" time="6.017" assertions="1">
+    <testcase name="TC05 - Invalid email format (no username) should fail" classname="contactUsTest" time="6.282" assertions="1">
 
     
     </testcase>
   
-    <testcase name="TC06 - Very long email should fail" classname="contactUsTest" time="11.29" assertions="1">  <failure message="Testing if element &lt;Element [name=@errorMessage]&gt; is visible in 5000ms - expected &#34;is visible&#34; but got: &#34;element could not be located&#34; (5228ms)">    at TC06 - Very long email should fail (E:\SDET-TASK\SDET-Task\UI\tests\contactUsTest.js:66:20)</failure>
+    <testcase name="TC06 - Very long email should fail" classname="contactUsTest" time="11.79" assertions="1">  <failure message="Testing if element &lt;Element [name=@errorMessage]&gt; is visible in 5000ms - expected &#34;is visible&#34; but got: &#34;element could not be located&#34; (5195ms)">    at TC06 - Very long email should fail (E:\SDET-TASK\SDET-Task\UI\tests\contactUsTest.js:66:20)</failure>
 
     
     </testcase>

@@ -11,7 +11,7 @@ module.exports = {
     server_path: chromedriver.path,
   },
   //  comment to generate html report as it gives error when running tests after a failure
-  skip_testcases_on_fail: false,
+  // skip_testcases_on_fail: false,
 
   test_settings: {
     default: {
