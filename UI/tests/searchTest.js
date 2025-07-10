@@ -19,6 +19,6 @@ module.exports = {
       .search("dress")
       .assertSearchHeading("DRESS")
       .assertAllProductsContainDress()
-      .end();
+      // .end();
   },
 };
