@@ -10,10 +10,9 @@ module.exports = {
     port: 9515,
     server_path: chromedriver.path,
   },
-  // this is commented to generate html report as it gives error when running tests after a failure
-  // Uncomment to run tests after a failure
+  //  comment to generate html report as it gives error when running tests after a failure
+  skip_testcases_on_fail: false,
 
-  // skip_testcases_on_fail: false,
   test_settings: {
     default: {
       desiredCapabilities: {

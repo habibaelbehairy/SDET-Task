@@ -23,7 +23,7 @@
     "chromedriver": "^138.0.2",
     "geckodriver": "^5.0.0",
     "nightwatch": "^3.12.2",
-    "nightwatch-html-reporter": "^2.0.6",
+    "nightwatch-html-reporter": "^2.0.6", 
     "selenium-webdriver": "^4.34.0"
   }
 }

@@ -36,6 +36,20 @@ jobs:
           destination: screenshots
       - store_test_results:
           path: UI/tests_output
+      - run:
+          name: Check test results summary
+          command: |
+            cd UI
+            # Count total failures
+            if [ -f tests_output/FIREFOX_*.xml ]; then
+              FAILURES=$(grep -c "failures=\"[1-9]" tests_output/FIREFOX_*.xml || echo "0")
+              if [ "$FAILURES" -gt "0" ]; then
+                echo "Found $FAILURES failing tests!"
+                echo "Tests are failing but pipeline will continue"
+              else
+                echo "All tests passed!"
+              fi
+            fi
   api-tests:
     docker:
       - image: cimg/node:18.17
