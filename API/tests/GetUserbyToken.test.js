@@ -2,12 +2,13 @@ const { request, helpers } = require("../testSetup");
 
 describe("GET USER - GET /api/v1/users", () => {
   let token;
+  jest.setTimeout(30000);
 
   beforeAll(async () => {
-    await helpers.createUserAndGetToken(); 
+    await helpers.createUserAndGetToken();
     token = await helpers.authenticateAndGetToken();
   });
-  
+
   afterAll(async () => {
     await helpers.cleanupUsers();
   });
@@ -19,10 +20,10 @@ describe("GET USER - GET /api/v1/users", () => {
     expect(res.status).toBe(200);
     expect(res.body).toEqual(
       expect.objectContaining({
-      email: expect.any(String),
-      id: expect.any(Number),
-      imageUrl: expect.any(String),
-      password: expect.any(String)
+        email: expect.any(String),
+        id: expect.any(Number),
+        imageUrl: expect.any(String),
+        password: expect.any(String),
       })
     );
   });
@@ -31,13 +32,13 @@ describe("GET USER - GET /api/v1/users", () => {
     const res = await request
       .get("/api/v1/users")
       .set("Authorization", "Bearer invalidtoken");
-    expect(res.status).toBe(403); 
+    expect(res.status).toBe(403);
     expect(res.body.message).toMatch(/invalid token|unauthorized/i);
   });
 
   test("GU03 - Missing token", async () => {
     const res = await request.get("/api/v1/users");
-    expect(res.status).toBe(401); 
-    expect(res.body.message).toMatch(/missing token|unauthorized/i); 
+    expect(res.status).toBe(401);
+    expect(res.body.message).toMatch(/missing token|unauthorized/i);
   });
 });

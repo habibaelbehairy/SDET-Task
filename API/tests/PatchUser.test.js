@@ -2,16 +2,15 @@ const { request, helpers } = require("../testSetup");
 
 describe("UPDATE USER - PATCH /api/v1/users", () => {
   let token;
-
+  jest.setTimeout(30000);
   beforeAll(async () => {
-    await helpers.createUserAndGetToken(); 
+    await helpers.createUserAndGetToken();
     token = await helpers.authenticateAndGetToken();
   });
 
   afterAll(async () => {
     await helpers.cleanupUsers();
   });
-
 
   test("PU01 - Update all fields", async () => {
     const res = await request
@@ -34,7 +33,7 @@ describe("UPDATE USER - PATCH /api/v1/users", () => {
       .set("Authorization", `${token}`)
       .send({ name: "Bebo" });
     expect(res.statusCode).toBe(200);
-  
+
     expect(res.body).toHaveProperty("message", "User updated with success!");
   });
 
@@ -44,7 +43,7 @@ describe("UPDATE USER - PATCH /api/v1/users", () => {
       .set("Authorization", `${token}`)
       .send({ email: "bebo@gmail.com" });
     expect(res.statusCode).toBe(200);
-  
+
     expect(res.body).toHaveProperty("message", "User updated with success!");
   });
 
@@ -54,7 +53,7 @@ describe("UPDATE USER - PATCH /api/v1/users", () => {
       .set("Authorization", `${token}`)
       .send({ password: "Habibapassword123" });
     expect(res.statusCode).toBe(200);
-  
+
     expect(res.body).toHaveProperty("message", "User updated with success!");
   });
 

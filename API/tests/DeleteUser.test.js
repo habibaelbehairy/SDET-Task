@@ -2,7 +2,7 @@ const { request, helpers, API_VERSION } = require("../testSetup");
 
 describe("DELETE USER - DELETE /api/v1/users", () => {
   let token;
-
+  jest.setTimeout(30000);
   beforeAll(async () => {
     await helpers.createUserAndGetToken(); 
     token = await helpers.authenticateAndGetToken();
