@@ -1,103 +1,38 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <testsuites errors="0"
-            failures="4"
-            tests="19">
+            failures="1"
+            tests="6">
 
   <testsuite name="contactUsTest" id="contactUsTest"
-    errors="0" failures="4" hostname="" package="contactUsTest" skipped="0"
-    tests="19" time="157.5" timestamp="">
+    errors="0" failures="1" hostname="" package="contactUsTest" skipped="13"
+    tests="6" time="48.39" timestamp="">
   
-    <testcase name="TC01 - Missing subject should fail" classname="contactUsTest" time="5.488" assertions="1">
+    <testcase name="TC01 - Missing subject should fail" classname="contactUsTest" time="5.676" assertions="1">
 
     
     </testcase>
   
-    <testcase name="TC02 - Missing email should fail" classname="contactUsTest" time="6.413" assertions="1">
+    <testcase name="TC02 - Missing email should fail" classname="contactUsTest" time="9.032" assertions="1">
 
     
     </testcase>
   
-    <testcase name="TC03 - Invalid email format (no @) should fail" classname="contactUsTest" time="6.680" assertions="1">
+    <testcase name="TC03 - Invalid email format (no @) should fail" classname="contactUsTest" time="7.659" assertions="1">
 
     
     </testcase>
   
-    <testcase name="TC04 - Invalid email format (no domain) should fail" classname="contactUsTest" time="6.099" assertions="1">
+    <testcase name="TC04 - Invalid email format (no domain) should fail" classname="contactUsTest" time="6.881" assertions="1">
 
     
     </testcase>
   
-    <testcase name="TC05 - Invalid email format (no username) should fail" classname="contactUsTest" time="6.468" assertions="1">
+    <testcase name="TC05 - Invalid email format (no username) should fail" classname="contactUsTest" time="7.530" assertions="1">
 
     
     </testcase>
   
-    <testcase name="TC06 - Very long email should fail" classname="contactUsTest" time="11.94" assertions="1">  <failure message="Testing if element &lt;Element [name=@errorMessage]&gt; is visible in 5000ms - expected &#34;is visible&#34; but got: &#34;element could not be located&#34; (5285ms)">    at TC06 - Very long email should fail (E:\SDET-TASK\SDET-Task\UI\tests\contactUsTest.js:66:20)</failure>
-
-    
-    </testcase>
-  
-    <testcase name="TC07 - Blank order reference should pass" classname="contactUsTest" time="6.111" assertions="1">
-
-    
-    </testcase>
-  
-    <testcase name="TC08 - Order reference with special characters should fail" classname="contactUsTest" time="11.44" assertions="1">  <failure message="Testing if element &lt;Element [name=@errorMessage]&gt; is visible in 5000ms - expected &#34;is visible&#34; but got: &#34;element could not be located&#34; (5189ms)">    at TC08 - Order reference with special characters should fail (E:\SDET-TASK\SDET-Task\UI\tests\contactUsTest.js:83:20)</failure>
-
-    
-    </testcase>
-  
-    <testcase name="TC09 - Very long order reference should fail" classname="contactUsTest" time="11.39" assertions="1">  <failure message="Testing if element &lt;Element [name=@errorMessage]&gt; is visible in 5000ms - expected &#34;is visible&#34; but got: &#34;element could not be located&#34; (5348ms)">    at TC09 - Very long order reference should fail (E:\SDET-TASK\SDET-Task\UI\tests\contactUsTest.js:93:20)</failure>
-
-    
-    </testcase>
-  
-    <testcase name="TC10 - Invalid file type should fail" classname="contactUsTest" time="6.126" assertions="1">
-
-    
-    </testcase>
-  
-    <testcase name="TC11 - File too large should fail" classname="contactUsTest" time="29.83" assertions="1">  <failure message="Testing if element &lt;Element [name=@errorMessage]&gt; is visible in 5000ms - expected &#34;is visible&#34; but got: &#34;element could not be located&#34; (5260ms)">    at TC11 - File too large should fail (E:\SDET-TASK\SDET-Task\UI\tests\contactUsTest.js:111:20)</failure>
-
-    
-    </testcase>
-  
-    <testcase name="TC12 - Blank message should fail" classname="contactUsTest" time="6.076" assertions="1">
-
-    
-    </testcase>
-  
-    <testcase name="TC13 - Short message should pass" classname="contactUsTest" time="6.104" assertions="1">
-
-    
-    </testcase>
-  
-    <testcase name="TC14 - Very long message should pass" classname="contactUsTest" time="6.369" assertions="1">
-
-    
-    </testcase>
-  
-    <testcase name="TC15 - Message with script tags should be sanitized" classname="contactUsTest" time="6.117" assertions="1">
-
-    
-    </testcase>
-  
-    <testcase name="TC16 - All valid inputs should pass" classname="contactUsTest" time="6.398" assertions="1">
-
-    
-    </testcase>
-  
-    <testcase name="TC17 - Invalid subject value should fail" classname="contactUsTest" time="6.122" assertions="1">
-
-    
-    </testcase>
-  
-    <testcase name="TC18 - Valid submission with Webmaster subject should pass" classname="contactUsTest" time="6.337" assertions="1">
-
-    
-    </testcase>
-  
-    <testcase name="TC19 - All fields blank should fail" classname="contactUsTest" time="5.972" assertions="1">
+    <testcase name="TC06 - Very long email should fail" classname="contactUsTest" time="11.62" assertions="1">  <failure message="Testing if element &lt;Element [name=@errorMessage]&gt; is visible in 5000ms - expected &#34;is visible&#34; but got: &#34;element could not be located&#34; (5157ms)">    at TC06 - Very long email should fail (E:\SDET-TASK\SDET-Task\UI\tests\contactUsTest.js:66:20)</failure>
 
     
     </testcase>
@@ -107,6 +42,73 @@
 
     
 
+  
+    
+    <testcase
+      name="TC07 - Blank order reference should pass" classname="contactUsTest">
+      <skipped />
+    </testcase>
+    
+    <testcase
+      name="TC08 - Order reference with special characters should fail" classname="contactUsTest">
+      <skipped />
+    </testcase>
+    
+    <testcase
+      name="TC09 - Very long order reference should fail" classname="contactUsTest">
+      <skipped />
+    </testcase>
+    
+    <testcase
+      name="TC10 - Invalid file type should fail" classname="contactUsTest">
+      <skipped />
+    </testcase>
+    
+    <testcase
+      name="TC11 - File too large should fail" classname="contactUsTest">
+      <skipped />
+    </testcase>
+    
+    <testcase
+      name="TC12 - Blank message should fail" classname="contactUsTest">
+      <skipped />
+    </testcase>
+    
+    <testcase
+      name="TC13 - Short message should pass" classname="contactUsTest">
+      <skipped />
+    </testcase>
+    
+    <testcase
+      name="TC14 - Very long message should pass" classname="contactUsTest">
+      <skipped />
+    </testcase>
+    
+    <testcase
+      name="TC15 - Message with script tags should be sanitized" classname="contactUsTest">
+      <skipped />
+    </testcase>
+    
+    <testcase
+      name="TC16 - All valid inputs should pass" classname="contactUsTest">
+      <skipped />
+    </testcase>
+    
+    <testcase
+      name="TC17 - Invalid subject value should fail" classname="contactUsTest">
+      <skipped />
+    </testcase>
+    
+    <testcase
+      name="TC18 - Valid submission with Webmaster subject should pass" classname="contactUsTest">
+      <skipped />
+    </testcase>
+    
+    <testcase
+      name="TC19 - All fields blank should fail" classname="contactUsTest">
+      <skipped />
+    </testcase>
+    
   
   </testsuite>
 </testsuites>
