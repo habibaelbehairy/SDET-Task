@@ -28,12 +28,16 @@ jobs:
             cd UI
             BROWSER=chrome npm test || true
           no_output_timeout: 5m
+      - run:
+          name: Keep only latest XML test results
+          command: |
+            cd UI/tests_output
+            for test in contactUsTest searchTest; do
+              ls -1t CHROME_*__${test}.xml | tail -n +2 | xargs -r rm --
+            done
       - store_artifacts:
           path: UI/tests_output
           destination: test-reports
-      - store_artifacts:
-          path: UI/screenshots
-          destination: screenshots
       - store_test_results:
           path: UI/tests_output
   api-tests:
