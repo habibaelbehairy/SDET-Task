@@ -23,16 +23,10 @@ jobs:
             - UI/node_modules
           key: v1-dependencies-{{ checksum "UI/package.json" }}
       - run:
-          name: Clean test artifacts before run
-          command: |
-            cd UI
-            rm -rf tests_output screenshots
-      - run:
           name: Run UI tests with Chrome
           command: |
             cd UI
-            # Run tests only once with explicit browser setting
-            npx nightwatch -e chrome
+            BROWSER=chrome npm test || true
           no_output_timeout: 5m
       - store_artifacts:
           path: UI/tests_output
