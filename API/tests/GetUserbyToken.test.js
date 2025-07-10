@@ -7,6 +7,10 @@ describe("GET USER - GET /api/v1/users", () => {
     await helpers.createUserAndGetToken(); 
     token = await helpers.authenticateAndGetToken();
   });
+  
+  afterAll(async () => {
+    await helpers.cleanupUsers();
+  });
 
   test("GU01 - Valid token", async () => {
     const res = await request

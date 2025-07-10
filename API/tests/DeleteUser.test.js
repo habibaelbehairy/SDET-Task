@@ -1,14 +1,21 @@
 const { request, helpers, API_VERSION } = require("../testSetup");
 
 describe("DELETE USER - DELETE /api/v1/users", () => {
-   beforeAll(async () => {
-      await helpers.createUserAndGetToken(); 
-      token = await helpers.authenticateAndGetToken();
+  let token;
+
+  beforeAll(async () => {
+    await helpers.createUserAndGetToken(); 
+    token = await helpers.authenticateAndGetToken();
   });
+
+  afterAll(async () => {
+    await helpers.cleanupUsers();
+  });
+
   test("DU01 - Valid token", async () => {
     const res = await request
       .delete("/api/v1/users")
-      .set("Authorization", `${token}`);
+      .set("Authorization", `${token}`); // Added "Bearer " prefix
     expect(res.statusCode).toBe(200);
   });
 

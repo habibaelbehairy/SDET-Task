@@ -9,7 +9,7 @@
     "test": "jest --config jest.config.js --detectOpenHandles --forceExit",
     "test:auth": "jest tests/auth --config jest.config.js --detectOpenHandles --forceExit",
     "test:users": "jest tests/users --config jest.config.js --detectOpenHandles --forceExit",
-    "test:report": "jest --config jest.config.js --detectOpenHandles --forceExit && open reports/test-report.html"
+    "test:report": "jest --config jest.config.js --detectOpenHandles --forceExit && start reports/test-report.html"
   },
   "keywords": [],
   "author": "habibaelbehairy",

@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="30" failures="26" errors="0" time="1.015">
+  <testsuite name="DELETE USER - DELETE /api/v1/users" errors="0" failures="1" skipped="0" timestamp="2025-07-10T00:01:34" time="0.43" tests="3">
+    <testcase classname="DELETE USER - DELETE /api/v1/users DU01 - Valid token" name="DELETE USER - DELETE /api/v1/users DU01 - Valid token" time="0.007">
+    </testcase>
+    <testcase classname="DELETE USER - DELETE /api/v1/users DU02 - Invalid token" name="DELETE USER - DELETE /api/v1/users DU02 - Invalid token" time="0.003">
+    </testcase>
+    <testcase classname="DELETE USER - DELETE /api/v1/users DU03 - Missing token" name="DELETE USER - DELETE /api/v1/users DU03 - Missing token" time="0.004">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: 401
+Received: 403
+    at Object.toBe (E:\SDET-TASK\SDET-Task\API\tests\DeleteUser.test.js:31:28)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="CREATE USER - POST /api/v1/users" errors="0" failures="7" skipped="0" timestamp="2025-07-10T00:01:34" time="0.132" tests="7">
+    <testcase classname="CREATE USER - POST /api/v1/users CU01 - Valid credentials" name="CREATE USER - POST /api/v1/users CU01 - Valid credentials" time="0.011">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: 200
+Received: 401
+    at Object.toBe (E:\SDET-TASK\SDET-Task\API\tests\Createusers.test.js:35:35)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="CREATE USER - POST /api/v1/users CU02 - Missing name" name="CREATE USER - POST /api/v1/users CU02 - Missing name" time="0.004">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: 400
+Received: 401
+    at Object.toBe (E:\SDET-TASK\SDET-Task\API\tests\Createusers.test.js:54:31)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="CREATE USER - POST /api/v1/users CU03 - Missing email" name="CREATE USER - POST /api/v1/users CU03 - Missing email" time="0.003">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: 400
+Received: 401
+    at Object.toBe (E:\SDET-TASK\SDET-Task\API\tests\Createusers.test.js:71:31)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="CREATE USER - POST /api/v1/users CU04 - Missing password" name="CREATE USER - POST /api/v1/users CU04 - Missing password" time="0.003">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: 400
+Received: 401
+    at Object.toBe (E:\SDET-TASK\SDET-Task\API\tests\Createusers.test.js:88:31)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="CREATE USER - POST /api/v1/users CU05 - Invalid email format" name="CREATE USER - POST /api/v1/users CU05 - Invalid email format" time="0.004">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: 400
+Received: 401
+    at Object.toBe (E:\SDET-TASK\SDET-Task\API\tests\Createusers.test.js:106:31)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="CREATE USER - POST /api/v1/users CU06 - Email already exists" name="CREATE USER - POST /api/v1/users CU06 - Email already exists" time="0.006">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: 409
+Received: 401
+    at Object.toBe (E:\SDET-TASK\SDET-Task\API\tests\Createusers.test.js:134:31)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="CREATE USER - POST /api/v1/users CU07 - Password too short" name="CREATE USER - POST /api/v1/users CU07 - Password too short" time="0.003">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: 400
+Received: 401
+    at Object.toBe (E:\SDET-TASK\SDET-Task\API\tests\Createusers.test.js:152:31)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="UPDATE USER - PATCH /api/v1/users" errors="0" failures="6" skipped="0" timestamp="2025-07-10T00:01:35" time="0.115" tests="8">
+    <testcase classname="UPDATE USER - PATCH /api/v1/users PU01 - Update all fields" name="UPDATE USER - PATCH /api/v1/users PU01 - Update all fields" time="0.004">
+    </testcase>
+    <testcase classname="UPDATE USER - PATCH /api/v1/users PU02 - Update only name" name="UPDATE USER - PATCH /api/v1/users PU02 - Update only name" time="0.003">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: 200
+Received: 403
+    at Object.toBe (E:\SDET-TASK\SDET-Task\API\tests\PatchUser.test.js:36:28)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="UPDATE USER - PATCH /api/v1/users PU03 - Update only email" name="UPDATE USER - PATCH /api/v1/users PU03 - Update only email" time="0.003">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: 200
+Received: 403
+    at Object.toBe (E:\SDET-TASK\SDET-Task\API\tests\PatchUser.test.js:46:28)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="UPDATE USER - PATCH /api/v1/users PU04 - Update only password" name="UPDATE USER - PATCH /api/v1/users PU04 - Update only password" time="0.003">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: 200
+Received: 403
+    at Object.toBe (E:\SDET-TASK\SDET-Task\API\tests\PatchUser.test.js:56:28)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="UPDATE USER - PATCH /api/v1/users PU05 - Invalid email format" name="UPDATE USER - PATCH /api/v1/users PU05 - Invalid email format" time="0.003">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: 400
+Received: 403
+    at Object.toBe (E:\SDET-TASK\SDET-Task\API\tests\PatchUser.test.js:66:28)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="UPDATE USER - PATCH /api/v1/users PU06 - Email already exists" name="UPDATE USER - PATCH /api/v1/users PU06 - Email already exists" time="0.005">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: 409
+Received: 403
+    at Object.toBe (E:\SDET-TASK\SDET-Task\API\tests\PatchUser.test.js:80:28)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+    <testcase classname="UPDATE USER - PATCH /api/v1/users PU07 - Invalid token" name="UPDATE USER - PATCH /api/v1/users PU07 - Invalid token" time="0.002">
+    </testcase>
+    <testcase classname="UPDATE USER - PATCH /api/v1/users PU08 - Empty request body" name="UPDATE USER - PATCH /api/v1/users PU08 - Empty request body" time="0.003">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: 400
+Received: 403
+    at Object.toBe (E:\SDET-TASK\SDET-Task\API\tests\PatchUser.test.js:96:28)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="GET USER - GET /api/v1/users" errors="0" failures="3" skipped="0" timestamp="2025-07-10T00:01:35" time="0.079" tests="3">
+    <testcase classname="GET USER - GET /api/v1/users GU01 - Valid token" name="GET USER - GET /api/v1/users GU01 - Valid token" time="0">
+      <failure>AggregateError: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)</failure>
+    </testcase>
+    <testcase classname="GET USER - GET /api/v1/users GU02 - Invalid token" name="GET USER - GET /api/v1/users GU02 - Invalid token" time="0">
+      <failure>AggregateError: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)</failure>
+    </testcase>
+    <testcase classname="GET USER - GET /api/v1/users GU03 - Missing token" name="GET USER - GET /api/v1/users GU03 - Missing token" time="0">
+      <failure>AggregateError: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="Authentication API Tests" errors="0" failures="6" skipped="0" timestamp="2025-07-10T00:01:35" time="0.079" tests="6">
+    <testcase classname="Authentication API Tests AU01 - Authenticate user with valid credentials" name="Authentication API Tests AU01 - Authenticate user with valid credentials" time="0">
+      <failure>AggregateError: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)</failure>
+    </testcase>
+    <testcase classname="Authentication API Tests AU02 - Invalid email format" name="Authentication API Tests AU02 - Invalid email format" time="0">
+      <failure>AggregateError: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)</failure>
+    </testcase>
+    <testcase classname="Authentication API Tests AU03 - Non-existent email" name="Authentication API Tests AU03 - Non-existent email" time="0">
+      <failure>AggregateError: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)</failure>
+    </testcase>
+    <testcase classname="Authentication API Tests AU04 - Wrong password" name="Authentication API Tests AU04 - Wrong password" time="0">
+      <failure>AggregateError: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)</failure>
+    </testcase>
+    <testcase classname="Authentication API Tests AU05 - Empty email field" name="Authentication API Tests AU05 - Empty email field" time="0">
+      <failure>AggregateError: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)</failure>
+    </testcase>
+    <testcase classname="Authentication API Tests AU06 - Empty password field" name="Authentication API Tests AU06 - Empty password field" time="0">
+      <failure>AggregateError: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="DELETE ALL USERS - DELETE /api/v1/all-users" errors="0" failures="3" skipped="0" timestamp="2025-07-10T00:01:35" time="0.087" tests="3">
+    <testcase classname="DELETE ALL USERS - DELETE /api/v1/all-users DA01 - Valid admin key" name="DELETE ALL USERS - DELETE /api/v1/all-users DA01 - Valid admin key" time="0">
+      <failure>AggregateError: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)</failure>
+    </testcase>
+    <testcase classname="DELETE ALL USERS - DELETE /api/v1/all-users DA02 - Invalid admin key &apos;no permision for deletion &apos;" name="DELETE ALL USERS - DELETE /api/v1/all-users DA02 - Invalid admin key &apos;no permision for deletion &apos;" time="0.001">
+      <failure>AggregateError: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)</failure>
+    </testcase>
+    <testcase classname="DELETE ALL USERS - DELETE /api/v1/all-users DA03 - Missing admin key" name="DELETE ALL USERS - DELETE /api/v1/all-users DA03 - Missing admin key" time="0">
+      <failure>AggregateError: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)</failure>
+    </testcase>
+  </testsuite>
+</testsuites>

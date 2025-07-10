@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites errors="0"
+            failures="1"
+            tests="1">
+
+  <testsuite name="searchTest" id="searchTest"
+    errors="0" failures="1" hostname="" package="searchTest" skipped="0"
+    tests="1" time="8.486" timestamp="">
+  
+    <testcase name="search for a dress" classname="searchTest" time="8.486" assertions="5">
+
+    
+
+    
+
+    
+
+      <failure message="Failed [strictEqual]: (All 7 products should contain &#39;dress&#39;. Found 5
+
+5 !== 7
+) - expected &#34;7&#34; but got: &#34;5&#34; (0ms)">
+5 !== 7
+
+    at NightwatchAPI.&lt;anonymous&gt; (E:\SDET-TASK\SDET-Task\UI\custom-commands\searchCommands.js:80:28)</failure>
+
+    
+    </testcase>
+  
+
+  
+
+    
+
+  
+  </testsuite>
+</testsuites>

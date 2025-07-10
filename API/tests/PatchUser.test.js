@@ -8,6 +8,11 @@ describe("UPDATE USER - PATCH /api/v1/users", () => {
     token = await helpers.authenticateAndGetToken();
   });
 
+  afterAll(async () => {
+    await helpers.cleanupUsers();
+  });
+
+
   test("PU01 - Update all fields", async () => {
     const res = await request
       .patch("/api/v1/users")
