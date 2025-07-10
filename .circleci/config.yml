@@ -23,18 +23,23 @@ jobs:
             - UI/node_modules
           key: v1-dependencies-{{ checksum "UI/package.json" }}
       - run:
+          name: Clean previous test results
+          command: |
+            cd UI
+            rm -rf tests_output/
+      - run:
           name: Run UI tests with Chrome
           command: |
             cd UI
             BROWSER=chrome npm test || true
           no_output_timeout: 5m
-      - run:
-          name: Keep only latest XML test results
-          command: |
-            cd UI/tests_output
-            for test in contactUsTest searchTest; do
-              ls -1t CHROME_*__${test}.xml | tail -n +2 | xargs -r rm --
-            done
+      # - run:
+      #     name: Keep only latest XML test results
+      #     command: |
+      #       cd UI/tests_output
+      #       for test in contactUsTest searchTest; do
+      #         ls -1t CHROME_*__${test}.xml | tail -n +2 | xargs -r rm --
+      #       done
       - store_artifacts:
           path: UI/tests_output
           destination: test-reports
